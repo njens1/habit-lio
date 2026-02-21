@@ -3,6 +3,10 @@ import { GoogleAuthProvider, signInWithCredential, onAuthStateChanged, createUse
 import { auth } from "./firebase";
 import { createUserProfile, listHabits, createHabit, deleteHabit, exportHabits } from "./firestore";
 import './App.css';
+import './Login.css';
+// import icons from Lucide React
+import {Eye, EyeOff} from 'lucide-react';
+import googleIcon from './icons/google_icon.png';
 import Menu from "./Menu";
 
 function App() {
@@ -14,6 +18,7 @@ function App() {
     const [password, setPassword] = useState('');
     const [error, setAuthError] = useState(null);
     const [isSignUp, setIsSignUp] = useState(true);
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const loadHabits = async (uid) => {
         try {
@@ -134,7 +139,7 @@ function App() {
 
     return ( // home page after login
         <div className="card">
-            <h1>Habit-lio</h1>
+            {/* <h1>Habit-lio</h1> */}
             {user ? (
                 <div>
                     <Menu />
@@ -183,6 +188,44 @@ function App() {
                 </div>
             ) : ( // sign in/sign up
                 <div>
+                    <div id="login-container">
+                        <h1>{isSignUp ? "Welcome Back" : "Create Account"}</h1>
+                        <h2 id="login-subtitle">{isSignUp ? "Sign in to Habit.lio" 
+                        : "Join Habit.lio"}</h2>
+                        <hr id="login-hr" />
+                        <p id="login-text">Track your habits and become a new you 🫵👑</p>
+                        {error && <p style={{ color: 'red', fontSize: '12px' }}>{error}</p>}
+                        <form onSubmit={handleEmailAuth}>
+                            <div id="email-container">
+                                <input type="email" id="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
+                            </div>
+                            <br />
+                            <div id = "password-container">
+                                <input type={passwordVisible ? "text" : "password"} id="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                                <button id="toggle-password" type="button" title={passwordVisible ? "Hide Password" : "Show Password"}  
+                                onClick={() =>setPasswordVisible(!passwordVisible) }>
+                                    {passwordVisible ? <EyeOff /> : <Eye />}
+                                </button>
+                            </div>
+                            <br />
+                            <button id="login" type="submit">{isSignUp ? "Sign In" : "Sign Up"}</button>
+                        </form>        
+                        <h3>OR</h3>
+                        <button id="google-sign-in" onClick={handleGoogleSignIn}>
+                            <img src={googleIcon} width="25px" height="25px" />
+                            &nbsp;{ isSignUp ? "Sign in with Google" : "Sign up with Google"}
+                        </button>
+                        <br />
+                        <span id="no-account"> 
+                            {isSignUp ? "Don't have an account?" : "Already have an account?"}&nbsp;
+                            <a href="#" onClick={() => setIsSignUp(!isSignUp)}>
+                                {isSignUp ? "Sign Up" : "Sign In"}
+                            </a>
+                        </span>
+                        <br />
+                        <script type="module" src="login.js"></script>
+                     </div>
+                    {/* I ACCOMPLISHED ALL AT BOTTOM 
                     <p>Track your habits!</p>
                     <form onSubmit={handleEmailAuth}>
                         <h2>{isSignUp ? "Create Account" : "Welcome Back"}</h2>
@@ -197,7 +240,7 @@ function App() {
                         <button type="submit">{isSignUp ? "Sign Up" : "Sign In"}</button>
                         {error && <p style={{ color: 'red', fontSize: '12px' }}>{error}</p>}
                     </form>
-
+                    
                     <button
                         onClick={() => setIsSignUp(!isSignUp)}
                         style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', textDecoration: 'underline' }}
@@ -206,7 +249,7 @@ function App() {
                     </button>
 
                     <div style={{margin: '15px 0'}}>OR</div>
-                    <button onClick={handleGoogleSignIn}>Sign in with Google</button>
+                    <button onClick={handleGoogleSignIn}>Sign in with Google</button> */}
                 </div>
             )}
         </div>

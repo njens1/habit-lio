@@ -19,6 +19,16 @@ function App() {
     const [error, setAuthError] = useState(null);
     const [isSignUp, setIsSignUp] = useState(true);
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Holds our standard habits to select from, feel free to add more, these I just thought of quick
+    const standardHabits = [
+        "Drink water",
+        "Read",
+        "Exercise",
+        "Stretch",
+        "Give a compliment"
+    ];
 
     const loadHabits = async (uid) => {
         try {
@@ -108,9 +118,22 @@ function App() {
         try {
             await createHabit(user.uid, { title: newHabitTitle });
             setNewHabitTitle("");
+            setIsModalOpen(false);
             await loadHabits(user.uid);
         } catch (error) {
             console.error("Error creating habit:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAddStandardHabit = async (title) => {
+        setLoading(true);
+        try {
+            await createHabit(user.uid, { title: title });
+            await loadHabits(user.uid);
+        } catch (error) {
+            console.error("Error:", error);
         } finally {
             setLoading(false);
         }
@@ -137,31 +160,72 @@ function App() {
         }
     };
 
+    const handleGoHome = () => {
+        setIsModalOpen(false);
+        setNewHabitTitle("");
+    };
+
     return ( // home page after login
         <div className="card">
             {/* <h1>Habit-lio</h1> */}
             {user ? (
                 <div>
-                    <Menu />
+                    <Menu
+                        onHomeClick={handleGoHome}
+                        onAddClick={() => setIsModalOpen(true)}
+                    />
                     <p>Welcome, <strong>{user.email}</strong>!</p>
-                    
-                    <div>
-                        <h2>Your Habits</h2>
-                        
-                        <div>
-                            <input
-                                type="text"
-                                value={newHabitTitle}
-                                onChange={(e) => setNewHabitTitle(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && handleAddHabit()}
-                                placeholder="Enter a new habit..."
-                                disabled={loading}
-                            />
-                            <button onClick={handleAddHabit} disabled={loading}>
-                                {loading ? "Adding..." : "Add Habit"}
-                            </button>
-                        </div>
 
+                    // Modal for habit adding
+                    {isModalOpen && (
+                        <div className="modal-overlay">
+                            <div className="modal-content">
+                                <h3>Add a New Habit</h3>
+
+                                <section>
+                                    <h4>Quick Add:</h4>
+                                    <div className="standard-habits-grid">
+                                        {standardHabits.map((habit) => (
+                                            <button
+                                                key={habit}
+                                                onClick={() => {
+                                                    handleAddStandardHabit(habit);
+                                                }}
+                                                className="standard-habit-btn"
+                                            >
+                                                {habit}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </section>
+
+                                <hr />
+
+                                <section>
+                                    <h4>Create Custom Habit:</h4>
+                                    <input
+                                        type="text"
+                                        value={newHabitTitle}
+                                        onChange={(e) => setNewHabitTitle(e.target.value)}
+                                        onKeyPress={(e) => e.key === 'Enter' && handleAddHabit()}
+                                        placeholder="Enter a new habit..."
+                                        disabled={loading}
+                                    />
+                                    <div className="modal-actions">
+                                        <button onClick={handleAddHabit} disabled={loading}>
+                                            {loading ? "Adding..." : "Add Habit"}
+                                        </button>
+                                        <button onClick={() => setIsModalOpen(false)} className="cancel-btn">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    )}
+                    <div>
+                        // Display habits
+                        <h2>Your Habits</h2>
                         <ul>
                             {habits.map((habit) => (
                                 <li key={habit.id}>

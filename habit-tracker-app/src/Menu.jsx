@@ -5,10 +5,10 @@
 import { House, Users, CirclePlus, CircleEllipsis, Mail } from 'lucide-react';
 import './App.css';
 
-function Menu() {
+function Menu({ onAddClick,onHomeClick }) {
     return (
         <div id="menu">
-        <button id="home-btn" title="Home">
+        <button id="home-btn" title="Home" onClick={onHomeClick}>
           <House color="black"/>
           </button>
           <span class="divider"></span>
@@ -16,7 +16,7 @@ function Menu() {
             <Users color="black"/>
             </button>
             <span class="divider"></span>
-            <button id="add-btn" title="Add Habits">
+            <button id="add-btn" title="Add Habits" onClick={onAddClick}>
               <CirclePlus color="black" />
               </button>
               <span class="divider"></span>

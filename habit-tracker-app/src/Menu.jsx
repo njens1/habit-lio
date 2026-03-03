@@ -4,6 +4,7 @@
 // import { createUserProfile, listHabits, createHabit, deleteHabit } from "./firestore";
 import { House, Users, CirclePlus, CircleEllipsis, Mail } from 'lucide-react';
 import './App.css';
+import HabitCreate from "./habitCreate";
 
 function Menu({ onAddClick,onHomeClick }) {
     return (
@@ -16,9 +17,10 @@ function Menu({ onAddClick,onHomeClick }) {
             <Users color="black"/>
             </button>
             <span class="divider"></span>
-            <button id="add-btn" title="Add Habits" onClick={onAddClick}>
+            <HabitCreate />
+            {/* <button id="add-btn" title="Add Habits" onClick={onAddClick}>
               <CirclePlus color="black" />
-              </button>
+              </button> */}
               <span class="divider"></span>
               <button id="mail-btn" title="Messages">
                 <Mail color="black" />

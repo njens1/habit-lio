@@ -9,6 +9,7 @@ import {Eye, EyeOff} from 'lucide-react';
 import googleIcon from './icons/google_icon.png';
 import Menu from "./Menu";
 import HabitCreate from "./habitCreate";
+import NewHabitForm from "./habitAnalysis";
 import Habit from "./habitComponents/habit";
 
 function App() {
@@ -167,6 +168,12 @@ function App() {
         setNewHabitTitle("");
     };
 
+
+    const [showPopup, setShowPopup] = useState(false);
+    //  const [uid, setUid] = useState("USER_ID_FROM_FIREBASE"); // This is your existing UID
+
+
+
     return ( // home page after login
         <div className="card">
             {/* <h1>Habit-lio</h1> */}
@@ -251,6 +258,10 @@ function App() {
                         {/* </ul> */}
                         <div>
                             <button onClick={() => handleExportHabits()}>Export Habits to CSV</button>
+                        </div>
+                        <div style={{ padding: '20px' }}>
+                            <button onClick={() => setShowPopup(true)}>Habit Analysis</button>
+                            {showPopup && (<NewHabitForm uid={user.uid} onClose={() => setShowPopup(false)} />)}
                         </div>
                         {habits.length === 0 && <p>No habits yet. Create one to get started!</p>}
                     </div>

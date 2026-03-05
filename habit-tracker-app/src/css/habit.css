@@ -21,6 +21,13 @@
     /* border: 1px solid black; */
 }
 
+.habit-streak{
+    position: relative;
+    top: -60px;
+    right: -40px;
+    font-size: 24px;
+    text-align: center;
+}
 
 /* .habit-name{
     width: 50%;

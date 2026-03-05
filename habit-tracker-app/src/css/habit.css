@@ -21,12 +21,27 @@
     /* border: 1px solid black; */
 }
 
+@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
+}
+
 .habit-streak{
     position: relative;
     top: -60px;
     right: -40px;
     font-size: 24px;
     text-align: center;
+    animation-name: pulse;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
 }
 
 /* .habit-name{

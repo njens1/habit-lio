@@ -9,7 +9,6 @@ function showPopup(show) {
 }
 
 function HabitOption({name, onAddClick, modifyHabit}) {
-
     return (
         <div>
             <div style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
@@ -148,10 +147,19 @@ function CreateHabitForm(props) {
                         </span>
                     </div>
                     <div id ="habit-info">
+                        <label htmlFor="habit-name" style={{fontSize: "18px", textAlign: "center"}}>
+                            Habit Name
+                        </label>
                         <input type="text" id="habit-name" name="habit-name" 
-                        placeholder="Habit Name" value={props.habitName} onChange={(e) => props.setHabitName(e.target.value)}/>
+                        placeholder="Habit Name" 
+                        value={props.habitName} 
+                        onChange={(e) => props.setHabitName(e.target.value)} required/>
                         <br />
                         {/* <br /> */}
+                        <label htmlFor="habit-description" 
+                        style={{fontSize: "18px", textAlign: "center"}}>
+                            Habit Description
+                        </label>
                         <textarea id="habit-description" maxlength="100"
                         name="habit-description" placeholder="Add Description"/>
                     </div>

@@ -165,17 +165,17 @@ function CreateHabitForm(props) {
                     e.preventDefault();
 
             const createdHabit = {
-                name: document.getElementById("habit-name").value,
+                name: document.getElementById("habit-name-created").value,
                 description: document.getElementById("habit-description").value,
                 type: habitType,
-                color: { color },
+                color: color,
                 goal: {
                     value: document.getElementById("value").value,
                     unit: document.getElementById("unit").value,
                     period: periodSelected,
                 },
-                startDate: document.getElementById("start-date").value,
-                endDate: document.getElementById("end-date").value,
+                startDate: document.getElementById("start-date-create").value,
+                endDate: document.getElementById("end-date-create").value,
                 isActive: true
                 };
 
@@ -186,7 +186,7 @@ function CreateHabitForm(props) {
                     }}>
                 {/* Initial Info */}
                 <div id = "habit-form-first-row">
-                    <div id="habit-circle">
+                    <div id="habit-circle-created">
                         <div id="habit-emoji" 
                         style={{backgroundColor: color, width: "10em", height: "10em", 
                         borderRadius: "50%"}}>
@@ -195,18 +195,14 @@ function CreateHabitForm(props) {
                         <span>
                             <label>Set Color: </label>
                             <input type="color" id="color-picker" 
-                            name="emoji-color" value={color} onChange={(e) =>{
-                                setColor(e.target.value)
-                                console.log("Created Habit:", {color}); // Debugging line
-                            } 
-                            }/>
+                            name="emoji-color" value={color} onChange={(e) => setColor(e.target.value)}/>
                         </span>
                     </div>
                     <div id ="habit-info">
-                        <label htmlFor="habit-name" style={{fontSize: "18px", textAlign: "center"}}>
+                        <label htmlFor="habit-name-created" style={{fontSize: "18px", textAlign: "center"}}>
                             Habit Name
                         </label>
-                        <input type="text" id="habit-name" name="habit-name" 
+                        <input type="text" id="habit-name-created" name="habit-name-created" 
                         placeholder="Habit Name" 
                         value={props.habitName} 
                         onChange={(e) => props.setHabitName(e.target.value)} required/>
@@ -227,12 +223,12 @@ function CreateHabitForm(props) {
                     <h2 style={{fontSize: "24px", textAlign: "center"}}>
                         Habit Type
                     </h2>
-                    <div id="habit-type-options">
-                        <button type="button" className='habit-type-option'
+                    <div id="habit-type-options-created">
+                        <button type="button" className='habit-type-option1'
                         id="build-option" onClick={() => selectType("Build")}>
                             Build
                         </button>
-                        <button type="button" className='habit-type-option' 
+                        <button type="button" className='habit-type-option1' 
                         id="quit-option" onClick={() => selectType("Quit")}>
                             Quit
                         </button>
@@ -303,8 +299,8 @@ function CreateHabitForm(props) {
                 <hr style={{color: "#000000", width: "100%"}}/>
                 <div id="submit-button-container">
                     <div id="priority-setting">
-                        <label for="priority" style={{fontSize: "18px", textAlign: "center"}}>Set Priority: </label>
-                        <select name="priority" id="priority" style={{fontSize: "18px", textAlign: "center"}}>
+                        <label for="priority1" style={{fontSize: "18px", textAlign: "center"}}>Set Priority: </label>
+                        <select name="priority1" id="priority1" style={{fontSize: "18px", textAlign: "center"}}>
                             <option value="none">No Preference</option>
                             <option value="low">Low</option>
                             <option value="medium">Medium</option>
@@ -315,11 +311,11 @@ function CreateHabitForm(props) {
                     <div id="habit-term">
                         <div id="start-date-container">
                             <p style={{fontSize: "16px", textAlign: "center"}}>Start Date</p>
-                            <input type="date" id="start-date" name="start-date" style={{fontSize: "18px", textAlign: "center"}}></input>
+                            <input type="date" id="start-date-create" name="start-date-create" style={{fontSize: "18px", textAlign: "center"}}></input>
                         </div>
                         <div id="end-date-container">
                             <p style={{fontSize: "16px", textAlign: "center"}}>End Date</p>
-                            <input type="date" id="end-date" name="end-date" style={{fontSize: "18px", textAlign: "center"}}>
+                            <input type="date" id="end-date-create" name="end-date-create" style={{fontSize: "18px", textAlign: "center"}}>
                             </input>
                         </div>
                     </div>
@@ -329,6 +325,7 @@ function CreateHabitForm(props) {
                     color: "black", fontWeight: "bold"}}>Create Habit</button>
                 </div>
             </form>
+            <br />
         </div>
     );
 }

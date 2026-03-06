@@ -53,6 +53,37 @@ export const createHabit = async (uid, habit) => {
   return docRef;
 };
 
+export const handleSaveHabit = async (user, updatedHabit) => {
+  console.log("user:", user);
+  console.log("editedHabit:", updatedHabit);
+  console.log("editedHabit.id:", updatedHabit?.id);
+  try {
+    console.log("updatedHabit.id:", updatedHabit.id);
+    const habitRef = doc(db, "users", user.uid, "habits", updatedHabit.id);
+
+    await updateDoc(habitRef, {
+      name: updatedHabit.name,
+      description: updatedHabit.description || "",
+      color: updatedHabit.color || "#000000",
+      type: updatedHabit.type || "General",
+      goal: updatedHabit.goal || { value: 1, unit: "minute" },
+      taskDays: updatedHabit.taskDays || "Everyday",
+      isActive: updatedHabit.isActive ?? true,
+    });
+
+    // setHabits((prev) =>
+    //   prev.map((habit) =>
+    //     habit.id === updatedHabit.id ? updatedHabit : habit
+    //   )
+    // );
+
+    // setShowEditPopup(false);
+    // setEditingHabit(null);
+  } catch (error) {
+    console.error("Failed to update habit:", error);
+  }
+}
+
 export const listHabits = async (uid) => {
   const habitsRef = collection(db, "users", uid, "habits");
   const habitsQuery = query(habitsRef, orderBy("createdAt", "desc"));

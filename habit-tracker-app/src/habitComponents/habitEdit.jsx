@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Pencil } from 'lucide-react';
 import '../css/habit.css'
+import HabitDetailsPopup from '../HabitDetails';  
 
 
-function HabitEdit(){
+function HabitEdit({habit, uid, loadHabits}){
     return(
         <div>
-            <button title="Edit Habit"
+            {/* <button title="Edit Habit"
             style={{borderRadius: "50%", backgroundColor: "white"}}>
                 <Pencil color='black'/>
-                </button>
+                </button> */}
+            <HabitDetailsPopup habit={habit} uid={uid} loadHabits={loadHabits} />
         </div>
     );
 }

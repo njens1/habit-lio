@@ -4,7 +4,7 @@ import HabitCreate from "./habitCreate";
 import { useState } from "react";
 import SettingsPopup from "./settingsMenuPopup";
 
-function Menu({ onHomeClick }) {
+function Menu({ onHomeClick, addHabit }) {
   const [showSettings, setShowSettings] = useState(false);
   return (
     <>
@@ -20,7 +20,7 @@ function Menu({ onHomeClick }) {
           <Users color="black" />{" "}
         </button>{" "}
         <span className="divider"></span>
-        <HabitCreate /> <span className="divider"></span>{" "}
+        <HabitCreate addHabit={addHabit} /> <span className="divider"></span>{" "}
         <button id="mail-btn" title="Messages">
           {" "}
           <Mail color="black" />{" "}

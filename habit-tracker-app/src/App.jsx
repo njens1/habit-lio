@@ -37,15 +37,8 @@ function App() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // // Holds our standard habits to select from, feel free to add more, these I just thought of quick
-  // const standardHabits = [
-  //     "Drink water",
-  //     "Read",
-  //     "Exercise",
-  //     "Stretch",
-  //     "Give a compliment"
-  // ];
-
+  // Load in the habits for the user, 
+  // called after login and after edits/deletes to refresh the habit list
   const loadHabits = async (uid) => {
     try {
       const userHabits = await listHabits(uid);
@@ -269,14 +262,8 @@ function App() {
               <h2 style={{ fontSize: "28px", color: "black" }}>Your Habits</h2>
               {/* <ul> */}
               {habits.map((habit) => (
-                <Habit
-                  key={habit.id}
-                  name={habit.name ?? ""}
-                  color={habit.color.color ?? "#000000"}
-                  goal={habit.goal.value}
-                  unit={habit.goal.unit}
-                  period={habit.goal.period}
-                />
+                < Habit key={habit.id} 
+                habit={habit} uid={user.id} loadHabits={loadHabits}/>
                 // <li key={habit.id}>
                 //     <div>
                 //         <h3>{habit.title}</h3>

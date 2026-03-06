@@ -155,7 +155,7 @@
     /* border: 5px solid black; */
 }
 
-#habit-circle{
+#habit-circle-created{
     /* border: 5px solid black; */
     display: flex;
     flex-direction: column;
@@ -163,7 +163,7 @@
     justify-content: center;
 }
 
-#habit-name{
+#habit-name-created{
     border: none;
     border-bottom: 1px solid black;
     font-size: 24px;
@@ -211,7 +211,7 @@
     justify-content: center;
 }
 
-#habit-type-options{
+#habit-type-options-created{
     /* display: grid;
     grid-template-columns: 1fr 1fr; */
     background-color: #D9D9D9;
@@ -220,7 +220,7 @@
     border-radius: 40px;
 }
 
-.habit-type-option{
+.habit-type-option1{
     background-color: #D9D9D9;
     width: 10em;
     height: 50px;

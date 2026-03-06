@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Pencil } from 'lucide-react';
 import './index.css';
 import './HabitDetails.css';
 
@@ -188,6 +189,7 @@ function Priority() {
                 </select>
             </div>
             <Line />
+            <br />
             <div id="habit-term">
                 <div id="start-date">
                     <p style={{fontSize: "16px", textAlign: "center"}}>Start Date</p>
@@ -240,8 +242,9 @@ function HabitDetailsPopup() {
         <div>
             
             {/* Temporary way to text popup */}
-            <button onClick={() => setShowPopup(true)}>
-                Create Habit
+            <button onClick={() => setShowPopup(true)}
+                style={{borderRadius: "50%", backgroundColor: "white"}}>
+                <Pencil color='black'/>
             </button>
 
             {showPopup && (

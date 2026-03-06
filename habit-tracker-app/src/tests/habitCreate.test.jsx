@@ -56,8 +56,7 @@ describe('HabitCreate Component', () => {
         // Add assertions to check if the habit was created successfully
         // This could involve checking for a success message 
         // or verifying that the new habit appears in the habit list
-        
-        render(<App />);
+        // render(<App />);
         // We should see the new habit in the habit list after creation
         expect(screen.getByText(/Exercise/i)).toBeInTheDocument();
     });

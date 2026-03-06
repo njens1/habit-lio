@@ -248,9 +248,10 @@ function App() {
                             Your Habits</h2>
                         {/* <ul> */}
                             {habits.map((habit) => (
+                                console.log("Rendering habit:", habit), // Debugging line to check the habit data being rendered
                                 < Habit key={habit.id} 
                                 name={habit.name ?? ""} 
-                                color={habit.color.color ?? "#000000"}
+                                color={habit.color ?? "#000000"}
                                 goal={habit.goal.value} 
                                 unit={habit.goal.unit} 
                                 period={habit.goal.period} />

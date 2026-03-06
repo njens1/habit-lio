@@ -1,35 +1,46 @@
-// import { useState, useEffect } from "react";
-// import { GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from "firebase/auth";
-// import { auth } from "./firebase";
-// import { createUserProfile, listHabits, createHabit, deleteHabit } from "./firestore";
-import { House, Users, CirclePlus, CircleEllipsis, Mail } from 'lucide-react';
-import './App.css';
+import { House, Users, Settings, Mail } from "lucide-react";
+import "./App.css";
 import HabitCreate from "./habitCreate";
+import { useState } from "react";
+import SettingsPopup from "./settingsMenuPopup";
 
-function Menu({ onAddClick,onHomeClick, addHabit }) {
-    return (
-        <div id="menu">
+function Menu({ onHomeClick }) {
+  const [showSettings, setShowSettings] = useState(false);
+  return (
+    <>
+      <div id="menu">
+        {" "}
         <button id="home-btn" title="Home" onClick={onHomeClick}>
-          <House color="black"/>
-          </button>
-          <span class="divider"></span>
-          <button id="users-btn" title="Friends">
-            <Users color="black"/>
-            </button>
-            <span class="divider"></span>
-            <HabitCreate addHabit = {addHabit} />
-            {/* <button id="add-btn" title="Add Habits" onClick={onAddClick}>
-              <CirclePlus color="black" />
-              </button> */}
-              <span class="divider"></span>
-              <button id="mail-btn" title="Messages">
-                <Mail color="black" />
-                </button>
-                <span class="divider"></span>
-              <button id="more-btn" title="More">
-                <CircleEllipsis color="black" />
-                </button>
+          {" "}
+          <House color="black" />{" "}
+        </button>{" "}
+        <span className="divider"></span>{" "}
+        <button id="users-btn" title="Friends">
+          {" "}
+          <Users color="black" />{" "}
+        </button>{" "}
+        <span className="divider"></span>
+        <HabitCreate /> <span className="divider"></span>{" "}
+        <button id="mail-btn" title="Messages">
+          {" "}
+          <Mail color="black" />{" "}
+        </button>{" "}
+        <span className="divider"></span>{" "}
+        <button
+          id="more-btn"
+          title="Settings"
+          onClick={() => setShowSettings(true)}
+        >
+          {" "}
+          <Settings color="black" />{" "}
+        </button>{" "}
       </div>
-    )};
+
+      {showSettings && (
+        <SettingsPopup closePopup={() => setShowSettings(false)} />
+      )}
+    </>
+  );
+}
 
 export default Menu;

@@ -38,9 +38,12 @@ export const getUserProfile = async (uid) => {
 export const createHabit = async (uid, habit) => {
   const habitsRef = collection(db, "users", uid, "habits");
   const habitDoc = {
-    title: habit.title,
+    name: habit.name,
     description: habit.description || "",
-    frequency: habit.frequency || "daily",
+    color: habit.color || "#000000",
+    type: habit.type || "General",
+    goal: habit.goal || { value: 1, unit: "minute" },
+    taskDays: habit.taskDays || "Everyday",
     isActive: habit.isActive ?? true,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp()

@@ -6,7 +6,7 @@ import { House, Users, CirclePlus, CircleEllipsis, Mail } from 'lucide-react';
 import './App.css';
 import HabitCreate from "./habitCreate";
 
-function Menu({ onAddClick,onHomeClick }) {
+function Menu({ onAddClick,onHomeClick, addHabit }) {
     return (
         <div id="menu">
         <button id="home-btn" title="Home" onClick={onHomeClick}>
@@ -17,7 +17,7 @@ function Menu({ onAddClick,onHomeClick }) {
             <Users color="black"/>
             </button>
             <span class="divider"></span>
-            <HabitCreate />
+            <HabitCreate addHabit = {addHabit} />
             {/* <button id="add-btn" title="Add Habits" onClick={onAddClick}>
               <CirclePlus color="black" />
               </button> */}

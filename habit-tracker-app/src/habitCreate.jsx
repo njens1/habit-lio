@@ -1,7 +1,13 @@
 import { useState } from 'react';
+import {auth} from "./firebase";
+import { useContext } from "react";
+import { AuthContext } from "./AuthContext";
+import { createUserProfile, listHabits, createHabit, 
+    deleteHabit, exportHabits } from "./firestore";
 import './habit-creation.css'
 
 import { X, Flame, Activity, Volleyball, HouseHeart, GraduationCap, Plus, ChevronLeft, CirclePlus, DockIcon} from 'lucide-react'
+import { doc } from 'firebase/firestore';
 
 function showPopup(show) {
     const popup = document.getElementById("popup-container");
@@ -107,9 +113,33 @@ function HabitWindow(props) {
 
 // BACKEND FUNCTIONALITIES SHOULD BE ADDED HERE!
 function CreateHabitForm(props) {
+    const [clicked, setClicked] = useState(false);
+    // Access the user from the AuthContext
+    const user = useContext(AuthContext);
+    console.log("Current user in CreateHabitForm:", user ? user.uid : null); // Debugging line
+
     const [habitType, setHabitType] = useState("Build");
     const [periodSelected, setPeriod] = useState("Day");
     const [color, setColor] = useState("#b9b7b7");
+
+    const handleAddHabit = async (createdHabit) => {
+        if (!user) return;
+
+        try {
+            await props.addHabit(createdHabit);
+        } catch (error) {
+            console.error("Error creating habit:", error);
+        }
+    };
+
+    // const loadHabits = async (uid) => {
+    //     try {
+    //         const userHabits = await listHabits(uid);
+    //         setHabits(userHabits);
+    //     } catch (error) {
+    //         console.error("Error loading habits:", error);
+    //     }
+    // };
 
     // Handles what happen you select what type of habit you want to create (build or quit)
     const selectType = (type) => {
@@ -131,7 +161,29 @@ function CreateHabitForm(props) {
     }
     return (
         <div>
-            <form id="create-habit-form">
+            <form id="create-habit-form" onSubmit={async (e) => {
+                    e.preventDefault();
+
+            const createdHabit = {
+                name: document.getElementById("habit-name").value,
+                description: document.getElementById("habit-description").value,
+                type: habitType,
+                color: { color },
+                goal: {
+                    value: document.getElementById("value").value,
+                    unit: document.getElementById("unit").value,
+                    period: periodSelected,
+                },
+                startDate: document.getElementById("start-date").value,
+                endDate: document.getElementById("end-date").value,
+                isActive: true
+                };
+
+                await handleAddHabit(createdHabit);
+
+                setClicked(true);
+                props.onSubmission();
+                    }}>
                 {/* Initial Info */}
                 <div id = "habit-form-first-row">
                     <div id="habit-circle">
@@ -142,8 +194,12 @@ function CreateHabitForm(props) {
                         <br />
                         <span>
                             <label>Set Color: </label>
-                            <input type="color" id="emoji-color" 
-                            name="emoji-color" value={color} onChange={(e) => setColor(e.target.value)}/>
+                            <input type="color" id="color-picker" 
+                            name="emoji-color" value={color} onChange={(e) =>{
+                                setColor(e.target.value)
+                                console.log("Created Habit:", {color}); // Debugging line
+                            } 
+                            }/>
                         </span>
                     </div>
                     <div id ="habit-info">
@@ -257,19 +313,20 @@ function CreateHabitForm(props) {
                     </div>
                     <h2 style={{fontSize: "20px", textAlign: "center"}}>Habit Term</h2>
                     <div id="habit-term">
-                        <div id="start-date">
+                        <div id="start-date-container">
                             <p style={{fontSize: "16px", textAlign: "center"}}>Start Date</p>
                             <input type="date" id="start-date" name="start-date" style={{fontSize: "18px", textAlign: "center"}}></input>
                         </div>
-                        <div id="end-date">
+                        <div id="end-date-container">
                             <p style={{fontSize: "16px", textAlign: "center"}}>End Date</p>
                             <input type="date" id="end-date" name="end-date" style={{fontSize: "18px", textAlign: "center"}}>
                             </input>
                         </div>
                     </div>
                     <br />
-                    <button type="submit" id="submit-button" 
-                    style={{backgroundColor: "#acacac", color: "black", fontWeight: "bold"}}>Create Habit</button>
+                    <button type="submit" id="submit-button" disabled={clicked}
+                    style={{backgroundColor: "#acacac", 
+                    color: "black", fontWeight: "bold"}}>Create Habit</button>
                 </div>
             </form>
         </div>
@@ -278,7 +335,7 @@ function CreateHabitForm(props) {
 
 
 
-function HabitCreate() {
+function HabitCreate({addHabit}) {
     const [clicked, setClicked] = useState(false);
     const [category, setCategory] = useState("Popular");
     const [habitName, setHabitName] = useState("");
@@ -345,7 +402,14 @@ function HabitCreate() {
                             <h2 id="habit-title" style={{fontSize: "36px", color:"black"}}>Create Habit:</h2>
                             <div id="create-habit-container">
                                 <div id="create-habit">
-                                    <CreateHabitForm habitName={habitName} setHabitName={setHabitName} />
+                                    <CreateHabitForm habitName={habitName} 
+                                    onSubmission={() => {
+                                        setCategory("Popular"), 
+                                        handleClick()
+                                        ;}}
+                                    setHabitName={setHabitName}
+                                    addHabit = {addHabit}
+                                    />
                                 </div>
                             </div>
                         </div>

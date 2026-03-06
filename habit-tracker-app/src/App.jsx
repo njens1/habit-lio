@@ -11,6 +11,7 @@ import Menu from "./Menu";
 import HabitCreate from "./habitCreate";
 import NewHabitForm from "./habitAnalysis";
 import Habit from "./habitComponents/habit";
+import { AuthContext } from "./AuthContext";
 
 function App() {
     const [user, setUser] = useState(null);
@@ -24,14 +25,14 @@ function App() {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Holds our standard habits to select from, feel free to add more, these I just thought of quick
-    const standardHabits = [
-        "Drink water",
-        "Read",
-        "Exercise",
-        "Stretch",
-        "Give a compliment"
-    ];
+    // // Holds our standard habits to select from, feel free to add more, these I just thought of quick
+    // const standardHabits = [
+    //     "Drink water",
+    //     "Read",
+    //     "Exercise",
+    //     "Stretch",
+    //     "Give a compliment"
+    // ];
 
     const loadHabits = async (uid) => {
         try {
@@ -114,21 +115,21 @@ function App() {
         }
     };
 
-    const handleAddHabit = async () => {
-        if (!newHabitTitle.trim() || !user) return;
+    // const handleAddHabit = async () => {
+    //     if (!newHabitTitle.trim() || !user) return;
 
-        setLoading(true);
-        try {
-            await createHabit(user.uid, { title: newHabitTitle });
-            setNewHabitTitle("");
-            setIsModalOpen(false);
-            await loadHabits(user.uid);
-        } catch (error) {
-            console.error("Error creating habit:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    //     setLoading(true);
+    //     try {
+    //         await createHabit(user.uid, { title: newHabitTitle });
+    //         setNewHabitTitle("");
+    //         setIsModalOpen(false);
+    //         await loadHabits(user.uid);
+    //     } catch (error) {
+    //         console.error("Error creating habit:", error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const handleAddStandardHabit = async (title) => {
         setLoading(true);
@@ -140,6 +141,13 @@ function App() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const addHabit = async (habit) => {
+        if (!user) return;
+
+        await createHabit(user.uid, habit);
+        await loadHabits(user.uid); // refresh habits
     };
 
     const handleDeleteHabit = async (habitId) => {
@@ -175,6 +183,7 @@ function App() {
 
 
     return ( // home page after login
+        <AuthContext.Provider value={user}>
         <div className="card">
             {/* <h1>Habit-lio</h1> */}
             {user ? (
@@ -182,6 +191,7 @@ function App() {
                     <Menu
                         onHomeClick={handleGoHome}
                         onAddClick={() => setIsModalOpen(true)}
+                        addHabit={addHabit}
                     />
                     <p>Welcome, <strong>{user.email}</strong>!</p>
 
@@ -239,9 +249,11 @@ function App() {
                         {/* <ul> */}
                             {habits.map((habit) => (
                                 < Habit key={habit.id} 
-                                name={habit.title} 
-                                goal={habit.goal} 
-                                period={habit.period} />
+                                name={habit.name ?? ""} 
+                                color={habit.color.color ?? "#000000"}
+                                goal={habit.goal.value} 
+                                unit={habit.goal.unit} 
+                                period={habit.goal.period} />
                                 // <li key={habit.id}>
                                 //     <div>
                                 //         <h3>{habit.title}</h3>
@@ -307,34 +319,10 @@ function App() {
                         <br />
                         <script type="module" src="login.js"></script>
                      </div>
-                    {/* I ACCOMPLISHED ALL AT BOTTOM 
-                    <p>Track your habits!</p>
-                    <form onSubmit={handleEmailAuth}>
-                        <h2>{isSignUp ? "Create Account" : "Welcome Back"}</h2>
-                        <div>
-                            <label style={{ color: 'white' }}>Email:</label>
-                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                        </div>
-                        <div>
-                            <label style={{ color: 'white' }}>Password:</label>
-                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                        </div>
-                        <button type="submit">{isSignUp ? "Sign Up" : "Sign In"}</button>
-                        {error && <p style={{ color: 'red', fontSize: '12px' }}>{error}</p>}
-                    </form>
-                    
-                    <button
-                        onClick={() => setIsSignUp(!isSignUp)}
-                        style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', textDecoration: 'underline' }}
-                    >
-                        {isSignUp ? "Already have an account? Sign In" : "Need an account? Sign Up"}
-                    </button>
-
-                    <div style={{margin: '15px 0'}}>OR</div>
-                    <button onClick={handleGoogleSignIn}>Sign in with Google</button> */}
                 </div>
             )}
         </div>
+    </AuthContext.Provider>
     );
 }
 

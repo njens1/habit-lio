@@ -132,15 +132,6 @@ function CreateHabitForm(props) {
         }
     };
 
-    // const loadHabits = async (uid) => {
-    //     try {
-    //         const userHabits = await listHabits(uid);
-    //         setHabits(userHabits);
-    //     } catch (error) {
-    //         console.error("Error loading habits:", error);
-    //     }
-    // };
-
     // Handles what happen you select what type of habit you want to create (build or quit)
     const selectType = (type) => {
         setHabitType(type);
@@ -173,6 +164,12 @@ function CreateHabitForm(props) {
                     value: document.getElementById("value").value,
                     unit: document.getElementById("unit").value,
                     period: periodSelected,
+                    taskDays: document.getElementById("task-day").value,
+                    taskDaysSelected: document.getElementById("task-day-value") ? document.getElementById("task-day-value").value : null
+                },
+                reminder: {
+                    time: document.getElementById("reminder-time").value,
+                    message: document.getElementById("reminder-message").value
                 },
                 startDate: document.getElementById("start-date-create").value,
                 endDate: document.getElementById("end-date-create").value,

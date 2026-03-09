@@ -35,6 +35,7 @@ export const getUserProfile = async (uid) => {
   return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
 };
 
+// Create Habits
 export const createHabit = async (uid, habit) => {
   const habitsRef = collection(db, "users", uid, "habits");
   const habitDoc = {
@@ -53,6 +54,7 @@ export const createHabit = async (uid, habit) => {
   return docRef;
 };
 
+// Hanndle Saving Habit when editing from the habit card
 export const handleSaveHabit = async (user, updatedHabit) => {
   console.log("user:", user);
   console.log("editedHabit:", updatedHabit);

@@ -132,15 +132,6 @@ function CreateHabitForm(props) {
         }
     };
 
-    // const loadHabits = async (uid) => {
-    //     try {
-    //         const userHabits = await listHabits(uid);
-    //         setHabits(userHabits);
-    //     } catch (error) {
-    //         console.error("Error loading habits:", error);
-    //     }
-    // };
-
     // Handles what happen you select what type of habit you want to create (build or quit)
     const selectType = (type) => {
         setHabitType(type);
@@ -173,13 +164,24 @@ function CreateHabitForm(props) {
                     value: document.getElementById("value").value,
                     unit: document.getElementById("unit").value,
                     period: periodSelected,
+                    taskDays: document.getElementById("task-day").value,
+                    taskDaysSelected: document.getElementById("task-day-value") ? document.getElementById("task-day-value").value : null
                 },
+                reminder: {
+                    activated: document.getElementById("reminder-activated").checked,
+                    time: document.getElementById("reminder-time").value,
+                    message: document.getElementById("reminder-message").value
+                },
+                priority: document.getElementById("priority1").value,
                 startDate: document.getElementById("start-date-create").value,
                 endDate: document.getElementById("end-date-create").value,
                 isActive: true
                 };
 
                 await handleAddHabit(createdHabit);
+                chrome.runtime.sendMessage({ type: "notify", 
+                    reason: "habitCreation", 
+                    message: `You have successfully created the habit: ${createdHabit.name}!`});
 
                 setClicked(true);
                 props.onSubmission();
@@ -193,9 +195,20 @@ function CreateHabitForm(props) {
                         </div>
                         <br />
                         <span>
-                            <label>Set Color: </label>
-                            <input type="color" id="color-picker" 
-                            name="emoji-color" value={color} onChange={(e) => setColor(e.target.value)}/>
+                            <label htmlFor="color-picker">Set Color: </label>
+                            <select name="color-picker" id="color-picker" value={color} onChange={(e) => setColor(e.target.value)}>
+                                <option value="#b9b7b7">Default</option>
+                                <option value="#f8aaaa">Red</option>
+                                <option value="#aaffaa">Green</option>
+                                <option value="#aaaaff">Blue</option>
+                                <option value="#ffffaa">Yellow</option>
+                                <option value="#ffb6c1">Pink</option>
+                                <option value="#ffa500">Orange</option>
+                                <option value="#800080">Purple</option>
+                            </select>
+
+                            {/* <input type="color" id="color-picker" 
+                            name="emoji-color" value={color} onChange={(e) => setColor(e.target.value)}/> */}
                         </span>
                     </div>
                     <div id ="habit-info">
@@ -241,7 +254,7 @@ function CreateHabitForm(props) {
                         Goal Info
                     </h2>
                     <div id="goal-period">
-                        <label for="period" style={{fontSize: "18px", textAlign: "center"}}>Goal Period: </label>
+                        <label htmlFor="period" style={{fontSize: "18px", textAlign: "center"}}>Goal Period: </label>
                         <select name="period" id="period" 
                         style={{fontSize: "18px", textAlign: "center"}} onChange={(e) => setPeriod(e.target.value)}>
                             <option value="Day">Daily</option>
@@ -251,10 +264,11 @@ function CreateHabitForm(props) {
                     </div>
                     <br />
                     <div id="goal-value">
-                        <label for="value" style={{fontSize: "18px", textAlign: "center"}}>Goal Value: </label>
+                        <label htmlFor="value" style={{fontSize: "18px", textAlign: "center"}}>Goal Value: </label>
                         <input type="number" id="value" name="value" min="1" 
                         style={{fontSize: "18px", textAlign: "center", width: "30%"}}/>
-                        <select name="unit" id="unit" style={{fontSize: "18px", textAlign: "center"}}>
+                        <select name="unit" id="unit" aria-label="unit"
+                        style={{fontSize: "18px", textAlign: "center"}}>
                             <option value="steps">steps</option>
                             <option value="gallons">gallons</option>
                             <option value="liters">liters</option>
@@ -262,7 +276,7 @@ function CreateHabitForm(props) {
                             <option value="hours">hours</option>
                             <option value="minutes">minutes</option>
                         </select>
-                        <label for="period-selected" style={{fontSize: "18px", textAlign: "center"}}> / {periodSelected} </label>
+                        <label htmlFor="period-selected" style={{fontSize: "18px", textAlign: "center"}}> / {periodSelected} </label>
                     </div>
                     <br />
                     <div id="task-days">
@@ -281,25 +295,27 @@ function CreateHabitForm(props) {
                 <div id="habit-form-fourth-row">
                     <h2 style={{fontSize: "24px", textAlign: "center"}}>Reminder Settings</h2>
                     <div id="reminder-options">
-                        <label for="reminder-time" style={{fontSize: "18px", textAlign: "center"}}>Want to be reminded? </label>
-                        <input type="checkbox" id="reminder-time" name="reminder-time" style={{fontSize: "18px"}} onChange={(e) => {
+                        <label htmlFor="reminder-activated" style={{fontSize: "18px", textAlign: "center"}}>Want to be reminded? </label>
+                        <input type="checkbox" id="reminder-activated" name="reminder-activated" style={{fontSize: "18px"}} onChange={(e) => {
                             document.getElementById("yes-reminder").hidden = !e.target.checked;
                         }}></input>
                         <br />
                         <div id="yes-reminder" hidden={true}>
-                            <label for="reminder-time" style={{fontSize: "18px", textAlign: "center"}}>Select Time: </label>
+                            <label htmlFor="reminder-time" style={{fontSize: "18px", textAlign: "center"}}>Select Time: </label>
                             <input type="time" id="reminder-time" name="reminder-time" style={{fontSize: "18px", textAlign: "center"}}>
                             </input>
                             <br />
                             <br />
-                            <textarea id="reminder-message" maxlength="100" placeholder='Reminder Message here' />
+                            <textarea id="reminder-message" 
+                            aria-label='Reminder Message' maxlength="100" 
+                            placeholder='Reminder Message here' />
                         </div>
                     </div>
                 </div>
                 <hr style={{color: "#000000", width: "100%"}}/>
                 <div id="submit-button-container">
                     <div id="priority-setting">
-                        <label for="priority1" style={{fontSize: "18px", textAlign: "center"}}>Set Priority: </label>
+                        <label htmlFor="priority1" style={{fontSize: "18px", textAlign: "center"}}>Set Priority: </label>
                         <select name="priority1" id="priority1" style={{fontSize: "18px", textAlign: "center"}}>
                             <option value="none">No Preference</option>
                             <option value="low">Low</option>

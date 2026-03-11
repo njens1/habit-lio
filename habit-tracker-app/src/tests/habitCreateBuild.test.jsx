@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import HabitCreate from '../habitCreate.jsx';
 import App from '../App.jsx';
 import Menu from '../Menu.jsx';
+import { AuthContext } from '../AuthContext.jsx';
 
 // Mocks logging in of user page.
 vi.mock("../auth", () => ({
@@ -36,28 +37,45 @@ describe('HabitCreate Component', () => {
         expect(await screen.findByLabelText(/Habit Name/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/Habit Description/i)).toBeInTheDocument();
     });
+
     // Basic test to check that the form submission creates a new habit. 
     // This is a critical test to ensure that the core functionality of habit creation 
     // works as expected.
-    test('creates a new habit on form submission', async () => {
+   test('Successfully created a new Build habit on form submission', async () => {
+        // Creates a user interaction controller and a mock function to simulate adding a habit.
         const user = userEvent.setup();
-        render(<HabitCreate />);
+        const mockAddHabit = vi.fn().mockResolvedValue();
 
-        // Go to the custom create screen
-        await user.click(screen.getByTitle("Custom"));
+        // Render the component
+        render(
+            <AuthContext.Provider value={{ uid: '123' }}>
+            <HabitCreate addHabit={mockAddHabit} />
+            </AuthContext.Provider>
+        );
+
+        // Open popup first
+        await user.click(screen.getByTitle(/Add Habit/i));
+
+        // Go to custom screen
+        await user.click(screen.getByTitle(/Custom/i));
 
         const nameInput = screen.getByLabelText(/Habit Name/i);
         const descriptionInput = screen.getByLabelText(/Habit Description/i);
         const submitButton = screen.getByRole('button', { name: /Create Habit/i });
-        fireEvent.change(nameInput, { target: { value: 'Exercise' } });
-        fireEvent.change(descriptionInput, { target: { value: 'Daily exercise routine' } });
-        fireEvent.click(submitButton);
-        
-        // Add assertions to check if the habit was created successfully
-        // This could involve checking for a success message 
-        // or verifying that the new habit appears in the habit list
-        // render(<App />);
-        // We should see the new habit in the habit list after creation
-        expect(screen.getByText(/Exercise/i)).toBeInTheDocument();
+
+        await user.clear(nameInput);
+        await user.type(nameInput, 'Exercise');
+        await user.type(descriptionInput, 'Daily exercise routine');
+        await user.click(submitButton);
+
+        expect(mockAddHabit).toHaveBeenCalledTimes(1);
+        expect(mockAddHabit).toHaveBeenCalledWith(
+            expect.objectContaining({
+            name: 'Exercise',
+            description: 'Daily exercise routine',
+            type: 'Build',
+            isActive: true,
+            })
+        );
     });
 });

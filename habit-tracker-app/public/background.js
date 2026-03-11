@@ -7,3 +7,22 @@ chrome.action.onClicked.addListener((tab) => {
   if (!tab?.id) return;
   chrome.sidePanel.open({ tabId: tab.id });
 });
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message?.type === "notify") {
+    if (message.reason === "habitCreation") {
+      // Show a notification when a habit is created successfully
+      const chosenTitle = ["Congratulations🔥", "What a Beast🤩🤩", "Congrats😎"];
+      chrome.notifications.create({
+        type: "basic",
+        iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon128.png"),
+        title: chosenTitle[Math.floor(Math.random() * chosenTitle.length)],
+        message: message.message
+      });
+    }
+    return true;
+  }
+
+  sendResponse({ error: "Unknown type", got: message });
+  return false;
+});

@@ -4,7 +4,7 @@ import '../css/habit.css'
 
 function Habit({habit, uid, loadHabits}){
     const dynamicFontSize = habit.name.length > 15 ? "20px" : "30px";
-    console.log("Habit Props:", habit); // Debugging line to check the props being passed to Habit component
+    // console.log("Habit Props:", habit); // Debugging line to check the props being passed to Habit component
   return(
     <div>
       <div className ="habit-created" style={{backgroundColor: habit.color ?? "#FFFFFF"}}>

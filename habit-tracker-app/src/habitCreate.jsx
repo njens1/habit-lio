@@ -182,6 +182,14 @@ function SelectTaskDays({mode, setClicked, daysSelected, setDaysSelected, setNum
                     <input type="number" id="number-days" min="1" max="7" onChange={(e) => setNumOfDays(parseInt(e.target.value) || 1)} />
                 </div>
             )}
+            {mode === "specific_month_number" && (
+                <div>
+                    <label htmlFor='number-month-days' style={{fontSize: "16px"}}>
+                        Enter the number of days per month you want to accomplish this habit:
+                    </label>
+                    <input type="number" id="number-month-days" min="1" max="31" onChange={(e) => setNumOfDays(parseInt(e.target.value) || 1)} />
+                </div>
+            )}
         </div>
     );
 }

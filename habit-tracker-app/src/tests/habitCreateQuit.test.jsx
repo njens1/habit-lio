@@ -173,6 +173,7 @@ describe('HabitCreate Component', () => {
             expect.objectContaining({
                 name: 'Reduce Smoking',
                 description: 'Cut down on smoking gradually',
+                emoji: '📝',
                 type: 'Quit',
                 color: '#f8aaaa',
                 goal:{ 
@@ -242,6 +243,7 @@ describe('HabitCreate Component', () => {
             expect.objectContaining({
                 name: 'Reduce Smoking',
                 description: 'Cut down on smoking gradually',
+                emoji: '📝',
                 type: 'Quit',
                 color: '#f8aaaa',
                 goal:{ 
@@ -323,6 +325,7 @@ describe('HabitCreate Component', () => {
             expect.objectContaining({
                 name: 'Reduce Smoking',
                 description: 'Cut down on smoking gradually',
+                emoji: '📝',
                 type: 'Quit',
                 color: '#f8aaaa',
                 goal:{ 
@@ -406,6 +409,7 @@ describe('HabitCreate Component', () => {
             expect.objectContaining({
                 name: 'Reduce Smoking',
                 description: 'Cut down on smoking gradually',
+                emoji: '📝',
                 type: 'Quit',
                 color: '#f8aaaa',
                 goal:{ 

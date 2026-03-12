@@ -12,7 +12,6 @@ import {
   listHabits,
   createHabit,
   deleteHabit,
-  exportHabits,
 } from "./firestore";
 import "./App.css";
 import "./Login.css";
@@ -38,7 +37,7 @@ function App() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Load in the habits for the user, 
+  // Load in the habits for the user,
   // called after login and after edits/deletes to refresh the habit list
   const loadHabits = async (uid) => {
     try {
@@ -62,7 +61,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleAuth = () => {
     chrome.identity.clearAllCachedAuthTokens(() => {
       // cleared cache tokens because of errors without it
       chrome.identity.getAuthToken({ interactive: true }, (token) => {
@@ -92,39 +91,36 @@ function App() {
     });
   };
 
-  const handleSignOut = () => {
-    auth.signOut().then(() => {
-      chrome.identity.getAuthToken({ interactive: false }, (token) => {
-        if (token) {
-          chrome.identity.removeCachedAuthToken({ token }, () => {});
-        }
-      });
-    });
-  };
-
-  const handleEmailAuth = async (event) => {
-    event.preventDefault();
-    setAuthError(null);
+  const handleEmailAuth = async (e) => {
+    e.preventDefault();
     try {
       if (isSignUp) {
-        // sign up if no account
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password,
-        );
-        await createUserProfile(userCredential.user.uid, {
-          email: userCredential.user.email,
-        });
-        console.log("User registered");
-      } else {
-        // sign in with email
+        // SIGN IN
         await signInWithEmailAndPassword(auth, email, password);
-        console.log("User signed in");
+        setAuthError(""); // clear error
+      } else {
+        // SIGN UP
+        await createUserWithEmailAndPassword(auth, email, password);
+        setAuthError("");
       }
-    } catch (error) {
-      setAuthError(error.message);
-      console.error("Auth error:", error.message);
+    } catch (err) {
+      console.error(err);
+
+      if (isSignUp) {
+        if (err.code === "auth/invalid-credential") {
+          setAuthError("No account found with these credentials.");
+        } else {
+          setAuthError("Sign up failed. " + err.code);
+        }
+      } else {
+        if (err.code === "auth/email-already-in-use") {
+          setAuthError("An account already exists with this email.");
+        } else if (err.code === "auth/weak-password") {
+          setAuthError("Password should be at least 6 characters.");
+        } else {
+          setAuthError("Sign up failed. " + err.code);
+        }
+      }
     }
   };
 
@@ -171,16 +167,6 @@ function App() {
       await loadHabits(user.uid);
     } catch (error) {
       console.error("Error deleting habit:", error);
-    }
-  };
-
-  const handleExportHabits = async () => {
-    if (!user) return;
-    try {
-      console.log("Attempted export");
-      await exportHabits(user.uid);
-    } catch (error) {
-      console.error("Error exporting habits:", error);
     }
   };
 
@@ -291,11 +277,7 @@ function App() {
                 // </li>
               ))}
               {/* </ul> */}
-              <div>
-                <button onClick={() => handleExportHabits()}>
-                  Export Habits to CSV
-                </button>
-              </div>
+
               <div style={{ padding: "20px" }}>
                 <button onClick={() => setShowPopup(true)}>
                   Habit Analysis
@@ -364,7 +346,7 @@ function App() {
                 </button>
               </form>
               <h3>OR</h3>
-              <button id="google-sign-in" onClick={handleGoogleSignIn}>
+              <button id="google-sign-in" onClick={handleGoogleAuth}>
                 <img src={googleIcon} width="25px" height="25px" />
                 &nbsp;{isSignUp ? "Sign in with Google" : "Sign up with Google"}
               </button>

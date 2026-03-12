@@ -19,7 +19,7 @@
   text-align: center;
 }
 
-.settings-popup button {
+.settings-popup > button {
   margin-top: 10px;
   width: 100%;
 }
@@ -27,4 +27,38 @@
 .delete-btn {
   background: red;
   color: white;
+}
+
+.password-input-wrapper {
+  position: relative;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding: 10px 40px 10px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  color: #555;
+  font-size: 16px;
+  height: 24px;
+  width: 24px;
+  border-radius: 6px;
 }

@@ -1,10 +1,13 @@
 import HabitEdit from "./habitEdit";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import HabitDetails from "../HabitDetails.jsx";
 import '../css/habit.css'
 
-function Habit({habit, uid, loadHabits}){
+function Habit({habit, uid, loadHabits, onEdit}){
+    const [showDetails, setShowDetails] = useState(false);
     const dynamicFontSize = habit.name.length > 15 ? "20px" : "30px";
-    // console.log("Habit Props:", habit); // Debugging line to check the props being passed to Habit component
+    console.log("Habit Props:", habit); // Debugging line to check the props being passed to Habit component
+
   return(
     <div>
       <div className ="habit-created" style={{backgroundColor: habit.color ?? "#FFFFFF"}}>
@@ -20,7 +23,7 @@ function Habit({habit, uid, loadHabits}){
         <div className="habit-streak-edit">
           {/* <h3 className="habit-streak" title="Habit Streak">🔥{habit.streak ? habit.streak : "0"}</h3> */}
           <h3 className="habit-streak" title="Habit Streak">🔥0</h3>
-          <HabitEdit habit={habit} uid={uid} loadHabits={loadHabits} />
+          <HabitEdit habit={habit} uid={uid} loadHabits={loadHabits} onOpen={onEdit}/>
         </div>
       </div>
       <br />

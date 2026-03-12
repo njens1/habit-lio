@@ -22,6 +22,7 @@ import Menu from "./Menu";
 import HabitCreate from "./habitCreate";
 import NewHabitForm from "./habitAnalysis";
 import Habit from "./habitComponents/habit";
+import HabitDetails from "./HabitDetails";
 import { AuthContext } from "./AuthContext";
 
 function App() {
@@ -177,6 +178,8 @@ function App() {
   const [showPopup, setShowPopup] = useState(false);
   //  const [uid, setUid] = useState("USER_ID_FROM_FIREBASE"); // This is your existing UID
 
+  const [selectedHabit, setSelectedHabit] = useState(null);
+
   return (
     // home page after login
     <AuthContext.Provider value={user}>
@@ -184,6 +187,13 @@ function App() {
         {/* <h1>Habit-lio</h1> */}
         {user ? (
           <div>
+            { selectedHabit ? (<HabitDetails
+                habit={selectedHabit}
+                uid={user.uid}
+                loadHabits={loadHabits}
+                onClose={() => setSelectedHabit(null)}
+              />) : (
+                <div>
             <Menu
               onHomeClick={handleGoHome}
               onAddClick={() => setIsModalOpen(true)}
@@ -192,6 +202,7 @@ function App() {
             <p>
               Welcome, <strong>{user.email}</strong>!
             </p>
+            
 
             {/* Modal for habit adding */}
             {isModalOpen && (
@@ -248,12 +259,10 @@ function App() {
               <h2 style={{ fontSize: "28px", color: "black" }}>Your Habits</h2>
               {/* <ul> */}
               {habits.map((habit) => (
-                <Habit
-                  key={habit.id}
-                  habit={habit}
-                  uid={user.id}
-                  loadHabits={loadHabits}
-                />
+                < Habit key={habit.id} 
+                habit={habit} uid={user.id}
+                 loadHabits={loadHabits}
+                 onEdit={() => setSelectedHabit(habit)}/>
                 // <li key={habit.id}>
                 //     <div>
                 //         <h3>{habit.title}</h3>
@@ -285,6 +294,8 @@ function App() {
               )}
             </div>
             <br />
+            </div>
+              )}
           </div>
         ) : (
           // sign in/sign up

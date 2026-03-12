@@ -30,7 +30,7 @@ function NameDescription({ habit, updateHabitField }) {
                 <input
                     type="text"
                     id="habit-name"
-                    placeholder="<Habit Name>"
+                    placeholder="Habit Name"
                     value={habit.name ?? ""}
                     onChange={(e) => updateHabitField("name", e.target.value)}
                 />
@@ -48,6 +48,7 @@ function NameDescription({ habit, updateHabitField }) {
     );
 }
 
+/*
 function MilestoneSettings() {
     const [rewardEveryStreak, setRewardEveryStreak] = useState(true);
     const [rewardAfterStreakDays, setRewardAfterStreakDays] = useState(0);
@@ -59,6 +60,7 @@ function MilestoneSettings() {
                                                        onClick={() => {setRewardEveryStreak(!rewardEveryStreak)}}/>
             </div>
             <Line />
+            
             <span id="reward-after-day-streaks"> 
                 Reward coins after every {" "}
                 <input id="number-input" type="number"/>
@@ -67,7 +69,7 @@ function MilestoneSettings() {
         </div>
     )
 }
-
+*/
 function HabitType({ habit, updateHabitField }) {
     const habitType = habit.type ?? "Build";
 
@@ -106,11 +108,10 @@ function GoalInfo({ habit, updateGoalField }) {
     return (
         <div id="goal-info">
             <div id="goal-period">
-                <label style={{ width: "90%" }}>Goal Period:</label>
+                <label>Goal Period:</label>
                 <select
                     name="period"
                     id="period"
-                    style={{ fontSize: "18px", textAlign: "left", cursor: "pointer" }}
                     value={habit.goal?.period ?? "Day"}
                     onChange={(e) => updateGoalField("period", e.target.value)}
                 >
@@ -159,7 +160,7 @@ function GoalInfo({ habit, updateGoalField }) {
                     name="task-day"
                     id="task-day"
                     style={{ fontSize: "18px", textAlign: "left" }}
-                    value={habit.taskDays ?? "everyday"}
+                    value={habit.goal?.taskDays ?? "everyday"}
                     onChange={(e) => updateGoalField("taskDays", e.target.value)}
                 >
                     <option value="everyday">Everyday</option>
@@ -175,16 +176,42 @@ function GoalInfo({ habit, updateGoalField }) {
 
 function ReminderSettings({ habit, updateHabitField }) {
     return (
-        <div id="reminder-settings">
+        <div id="reminder-settings"
+            style={{ minHeight: habit.reminderEnabled ? "160px" : "45px"}}
+        >
             <div id="reminder-option">
                 <span>Do you want to be reminded?</span>
                 <input
                     type="checkbox"
                     id="reminder-check"
-                    checked={habit.reminderEnabled ?? true}
+                    checked={habit.reminderEnabled ?? false}
                     onChange={(e) => updateHabitField("reminderEnabled", e.target.checked)}
                 />
             </div>
+
+            {/* Do not put these in a div */}
+            <Line isItHidden={!habit.reminderEnabled}/>
+            
+      
+            <div id="select-time">
+                <span hidden={!habit.reminderEnabled}>Select Time:</span>
+                <input 
+                    type="time" 
+                    id="select-time-selector"
+                    hidden={!habit.reminderEnabled}
+                />
+            </div>
+        
+
+            <Line isItHidden={!habit.reminderEnabled}/>
+
+            <textarea
+                id="rem-message"
+                hidden={!habit.reminderEnabled}
+                placeholder="Reminder message here"
+                value={habit.reminderMessage ?? ""}
+                onChange={(e) => updateHabitField("reminderMessage", e.target.value)}
+            />
         </div>
     );
 }
@@ -197,7 +224,6 @@ function Priority({ habit, updateHabitField }) {
                 <select
                     name="priority"
                     id="select-priority"
-                    style={{ fontSize: "18px", textAlign: "left" }}
                     value={habit.priority ?? "none"}
                     onChange={(e) => updateHabitField("priority", e.target.value)}
                 >
@@ -240,9 +266,9 @@ function Priority({ habit, updateHabitField }) {
     );
 }
 
-function Line() {
+function Line({ isItHidden }) {
     return (
-        <div className="line" />
+        <div className="line" hidden={ isItHidden } />
     );
 }
 
@@ -279,6 +305,7 @@ function HabitDetails({ habit, uid, onClose, loadHabits }) {
     async function handleSave() {
         try {
             await handleSaveHabit(user, editedHabit);
+            console.log(editedHabit);
             onClose();
             if (loadHabits) {
                 await loadHabits(user.uid);
@@ -347,34 +374,4 @@ function HabitDetails({ habit, uid, onClose, loadHabits }) {
     );
 }
 
-function HabitDetailsPopup({habit, uid, loadHabits}) {
-    const [showPopup, setShowPopup] = useState(false);
-
-    return (
-        <div>
-            
-            {/* Temporary way to text popup */}
-            <button onClick={() => setShowPopup(true)}
-                style={{borderRadius: "50%", backgroundColor: "white"}}>
-                <Pencil color='black'/>
-            </button>
-
-            {showPopup && (
-                <div
-                    id="habit-popup-overlay"
-                    onClick={() => setShowPopup(false)}
-                >
-                    <div
-                        id="habit-popup"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <HabitDetails habit={habit} 
-                        uid={uid} loadHabits={loadHabits} onClose={() => setShowPopup(false)}/>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-}
-
-export default HabitDetailsPopup;
+export default HabitDetails;

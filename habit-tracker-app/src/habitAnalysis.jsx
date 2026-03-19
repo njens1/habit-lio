@@ -9,92 +9,153 @@ ChartJS.defaults.scales.linear.ticks.stepSize = 1;
 ChartJS.defaults.scales.linear.beginAtZero = true;
 
 export default function NewHabitForm({ uid, onClose }) {
+  const [habitsData, setHabitsData] = useState([]);
   const [totalHabits, setTotalHabits] = useState(0);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [availableYears, setAvailableYears] = useState([new Date().getFullYear()]);
   const [barData, setBarData] = useState({ labels: [], datasets: [] });
   const [pieData, setPieData] = useState({ labels: [], datasets: [] });
+  const [highestStreak, setHighestStreak] = useState(0);
 
-  const overlayStyle = { position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0, 0, 0, 0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 9999 };
-  const popupStyle = { backgroundColor: 'white', padding: '30px', borderRadius: '15px', width: '90%', maxWidth: '600px', boxShadow: '0 10px 25px rgba(0,0,0,0.3)' };
+  const overlayStyle = { 
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9999
+  };
+
+  const popupStyle = { 
+    backgroundColor: 'white',
+    padding: '30px',
+    borderRadius: '15px',
+    width: '90%',
+    maxWidth: '700px',
+    maxHeight: '85vh',
+    overflowY: 'auto',
+    boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
+    position: 'relative'
+  };
 
   useEffect(() => {
     if (!uid) return;
-
     const fetchHabits = async () => {
       try {
-        //fetch user data
         const habitsRef = collection(db, "users", uid, "habits");
-        const q = query(habitsRef);
-        const querySnapshot = await getDocs(q); 
-        
-        const habitsData = [];
-        querySnapshot.forEach((doc) => {
-          habitsData.push({ id: doc.id, ...doc.data() });
-        });
+        const querySnapshot = await getDocs(query(habitsRef));
+        const fetched = [];
+        const years = new Set([new Date().getFullYear()]);
 
-        if (habitsData.length === 0) {
-          console.log("No habits found");
-          return;
-        }
-        setTotalHabits(habitsData.length);
-      
-        setBarData({         
-          labels: ["Total Habits"],         
-          datasets: [{           
-            label: "Habit Count",           
-            data: [habitsData.length],           
-            backgroundColor: "rgba(75, 192, 192, 0.6)",
-            borderColor: "rgb(75, 192, 192)",
-            borderWidth: 1
-          }]       
+        querySnapshot.forEach((doc) => {
+          const data = doc.id ? { id: doc.id, ...doc.data() } : doc.data();
+          fetched.push(data);
+          
+          const start = data.startDate?.toDate?.() || new Date(data.startDate);
+          const end = data.endDate?.toDate?.() || new Date(data.endDate);
+          if (start && end) {
+            const startYear = start.getFullYear();
+            const endYear = end.getFullYear();
+            for (let y = startYear; y <= endYear; y++) {
+              years.add(y);
+            }
+          }
         });
         
-        //this currently uses fake data
+        const streaks = fetched.map(h => Number(h.streak) || 0);
+        setHighestStreak(streaks.length > 0 ? Math.max(...streaks) : 0);
+        setHabitsData(fetched);
+        setTotalHabits(fetched.length);
+        setAvailableYears(Array.from(years).sort((a, b) => b - a));
+
+        // Fake Pie Chart Data
         setPieData({
           labels: ['Health', 'Exercise', 'Financial', 'Learning', 'Other'],
           datasets: [{
             data: [3, 1, 2, 0, 4],
             backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-            hoverOffset: 4
           }]
         });
-
-      } catch (error) {
-        console.error("Error fetching habits:", error);
-      }
+      } catch (error) { console.error("Error:", error); }
     };
     fetchHabits();
   }, [uid]);
 
+  useEffect(() => {
+    if (habitsData.length === 0) return;
 
-  return (     
-    <div style={overlayStyle}>       
-      <div style={popupStyle}>      
-         
-        <div style={{ position: 'relative', textAlign: 'center', marginBottom: '30px' }}>
-          <h2 style={{ margin: 0 }}>Habit Analytics</h2>
-          <button onClick={onClose} style={{ position: 'absolute', top: '-25px', right: '-25px', background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#666' }}>
-            ✕
-          </button>
-        </div>      
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const counts = months.map((_, index) => {
+      return habitsData.filter(habit => {
+        const start = habit.startDate?.toDate?.() || new Date(habit.startDate);
+        const end = habit.endDate?.toDate?.() || new Date(habit.endDate);
+        const mStart = new Date(selectedYear, index, 1);
+        const mEnd = new Date(selectedYear, index + 1, 0);
+        return start <= mEnd && end >= mStart;
+      }).length;
+    });
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', alignItems: 'start', justifyItems: 'center' }}>
+    setBarData({
+      labels: months,
+      datasets: [{
+        label: `Active Habits (${selectedYear})`,
+        data: counts,
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgb(0, 0, 0)",
+        borderWidth: 1
+      }]
+    });
+  }, [habitsData, selectedYear]);
 
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ height: '250px' }}>
-              <Bar data={barData} />
-            </div>
-            <p>Total: <strong>{totalHabits}</strong></p>
-          </div>
-
-          <div style={{ textAlign: 'center' }}>
-            <h3 style={{ marginBottom: '15px' }}>Habit Distribution</h3>
-            <div style={{ height: '250px' }}>
-              <Pie data={pieData} />
-            </div>
-          </div>
-
+  return (
+    <div style={overlayStyle}>
+      <div style={popupStyle}>
+        <div style={{ position: 'sticky', top: '-30px', backgroundColor: 'white', padding: '10px 0', zIndex: 10, borderBottom: '1px solid #eee', marginBottom: '20px' }}>
+          <h2 style={{ margin: 0, textAlign: 'center' }}>Habit Analytics</h2>
+          <button onClick={onClose} style={{ position: 'absolute', right: '-25px', top: '-10px', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer' }}>✕</button>
         </div>
-      </div>     
-    </div>   
-  ); 
+
+        <div style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+            <div>
+              <p style={{ margin: 0, fontSize: '14px', color: '#666' }}>Lifetime Habits</p>
+              <strong style={{ fontSize: '24px' }}>{totalHabits}</strong>
+            </div>
+            <select value={selectedYear} onChange={(e) => setSelectedYear(Number(e.target.value))} style={{ padding: '8px', borderRadius: '5px' }}>
+              {availableYears.map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
+          </div>
+          <div style={{ height: '280px' }}>
+            <Bar data={barData} options={{ maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }} />
+          </div>
+        </div>
+
+        <div style={{ borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '30px', border: '2px solid black' }}>
+          <div>
+            <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: '500' }}>
+              Current Highest Streak
+            </p>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontSize: '42px', fontWeight: 'bold', lineHeight: '1' }}>
+              🔥{highestStreak}
+            </span>
+          </div>
+        </div>
+
+        <div style={{ borderTop: '1px solid #eee', paddingTop: '30px', textAlign: 'center' }}>
+          <h3 style={{ marginBottom: '20px' }}>Category Distribution</h3>
+          <div style={{ height: '300px', display: 'flex', justifyContent: 'center' }}>
+            <Pie data={pieData} options={{ maintainAspectRatio: false }} />
+          </div>
+        </div>
+
+        <div style={{ height: '20px' }}></div>
+      </div>
+    </div>
+  );
 }

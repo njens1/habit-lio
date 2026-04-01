@@ -58,9 +58,9 @@ function Page2({currentPage, setCurrentPage, setUserInfo}){
 function Page3({currentPage, setCurrentPage}){
     const [pageName, setPageName] = useState("Page3");
     console.log("current page should be 3: ", currentPage !== pageName);
-    var fileInputRef = document.getElementById("profile-picture");
-    // Erase the file selected if users decide to click "upload file after uploading"
-    
+    // var fileInputRef = document.getElementById("profile-picture");
+    // // Erase the file selected if users decide to click "upload file after uploading"
+
 
     return(
         <div className="onboarding-wrapper" hidden = {currentPage !== pageName}>
@@ -69,10 +69,45 @@ function Page3({currentPage, setCurrentPage}){
             <p>Upload a profile picture to personalize your experience.</p>
             <p>Let the world know who you are!!</p>
             <label htmlFor="profile-picture">Upload Profile Picture</label>
-            <input type="file" id="profile-picture" name="profile-picture" accept="image/*" />
+            <input type="file" id="profile-picture" 
+            name="profile-picture" accept="image/*"  />
             <br />
             <button className="continue-btn"
             onClick={() => setCurrentPage("Page4")} >Continue</button>
+        </div>
+        </div>
+    )
+}
+
+function Page4({currentPage, setCurrentPage, setUserInfo}){
+    const [pageName, setPageName] = useState("Page4");
+    const [habitGoal, setHabitGoal] = useState("build");
+    console.log("current page should be 4: ", currentPage !== pageName);
+    return(
+        <div className="onboarding-wrapper" hidden = {currentPage !== pageName}>
+        <div className = "onboarding-content">
+            <h1>What are you looking to do with your habits?</h1>
+            <p>Tell me about your habit-tracking goals!</p>
+            <div id="onboard-build-quit-btns">
+                <label htmlFor="build"><button className="onboarding-build-quit" 
+                title="Build Habits"
+                name="build"
+                onClick={() => {setUserInfo((prevUserInfo) => 
+                    ({...prevUserInfo, habitGoal: "build"})); setHabitGoal("build")}}
+                    style={{backgroundColor: habitGoal === "build" ? "#5B5FB4" : "#969696",
+                    color: habitGoal === "build" ? "white" : "black"}}>Build</button></label>
+            
+            <label htmlFor="quit"><button className="onboarding-build-quit" 
+            title="Quit Habits"
+            name="quit"
+                onClick={() => {setUserInfo((prevUserInfo) => 
+                    ({...prevUserInfo, habitGoal: "quit"})); setHabitGoal("quit")}}
+                    style={{backgroundColor: habitGoal === "quit" ? "#5B5FB4" : "#969696",
+                    color: habitGoal === "quit" ? "white" : "black"}}>Quit</button></label>
+            </div>
+            <h1>{habitGoal === "build" ? "Awesome! Let’s build up some habits then!" : "Got it! Let’s work on breaking some habits."}</h1>
+            <button className="continue-btn"
+            onClick={() => setCurrentPage("Page5")} >Continue</button>
         </div>
         </div>
     )
@@ -84,7 +119,8 @@ function OnboardingPopup(props) {
         firstName: "",
         lastName: "",
         username: "",
-        greetUsername: false
+        greetUsername: false,
+        habitGoal: "",
     });
     const [showPopup, setShowPopup] = useState(false);
     const [currentPage, setCurrentPage] = useState("Page1");
@@ -134,6 +170,10 @@ function OnboardingPopup(props) {
 
                     < Page3 currentPage={currentPage} 
                     setCurrentPage={setCurrentPage} />
+
+                    < Page4 currentPage={currentPage} 
+                    setCurrentPage={setCurrentPage} 
+                    setUserInfo={setUserInfo} />
                 </div>
             </div>
         </div>

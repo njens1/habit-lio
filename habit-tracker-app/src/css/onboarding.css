@@ -54,7 +54,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    height: 75%; 
+    height: 85%; 
     overflow-y: auto;
     flex-shrink: 0; 
 }
@@ -98,4 +98,23 @@ label{
 
 #profile-picture{
     width: 90%;
+}
+
+.onboarding-build-quit{
+    width: 7em;
+    height: 7em;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #969696;
+    border: none;
+    border-radius: 50%;
+}
+
+
+#onboard-build-quit-btns{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
 }

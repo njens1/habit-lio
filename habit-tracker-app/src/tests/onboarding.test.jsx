@@ -80,7 +80,7 @@ describe('Third Onboarding Page', () => {
     await user.click(continueButton2);
 
     // The exact onboarding popup text should be present in the document.
-    expect(await screen.findByText(/Add a Profile Picture (Optional)/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Add a Profile Picture/i)).toBeInTheDocument();
 
     const profilePictureInput = await screen.findByLabelText(/Profile Picture/i);
     expect(profilePictureInput).toBeInTheDocument();
@@ -114,6 +114,117 @@ describe('Fourth Onboarding Page', () => {
     const buildButton = await screen.findByRole("button", { name: /Build/i });
     expect(buildButton).toBeInTheDocument();
 
+  })
+
+});
+
+// FIFTH PAGE TESTS
+
+// Show the FIFTH page in onboarding
+describe('Fifth Onboarding Page', () => {
+  test("renders fifth page of onboarding popup", async () => {
+    const user = userEvent.setup();
+    const hidden = false; 
+    render(<OnboardingPopup props = {hidden} />);
+    const continueButton = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton);
+
+    const continueButton2 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton2);
+
+    const continueButton3 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton3);
+
+    const continueButton4 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton4);
+
+    // The exact onboarding popup text should be present in the document.
+    expect(await screen.
+      findByText(/List some Affirmations!/i)).toBeInTheDocument();
+    
+    const addButton = await screen.findByRole("button", { name: /Add Another/i });
+    expect(addButton).toBeInTheDocument();
+
+  })
+
+  test("renders correct affirmation text based on habit goal", async () => {
+    const user = userEvent.setup();
+    const hidden = false; 
+    render(<OnboardingPopup props = {hidden} />);
+
+    const continueButton = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton);
+
+    const continueButton2 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton2);
+
+    const continueButton3 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton3);
+
+    const continueButton4 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton4);
+
+    const positiveAffirmationInput = await screen.findByLabelText(/Positive Affirmation 1/i);
+    expect(positiveAffirmationInput).toBeInTheDocument();
+  })
+
+});
+
+
+// SIXTH PAGE TESTS
+
+// Show the Sixth page in onboarding
+describe('Sixth Onboarding Page', () => {
+  test("renders sixth page of onboarding popup", async () => {
+    const user = userEvent.setup();
+    const hidden = false; 
+    render(<OnboardingPopup props = {hidden} />);
+    const continueButton = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton);
+
+    const continueButton2 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton2);
+
+    const continueButton3 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton3);
+
+    const continueButton4 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton4);
+
+    const continueButton5 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton5);
+
+    // The exact onboarding popup text should be present in the document.
+    expect(await screen.
+      findByText(/YOU ARE ALL SET!/i)).toBeInTheDocument();
+
+
+  })
+
+  test("clicking let's go button should close onboarding popup", async () => {
+    const user = userEvent.setup();
+    const hidden = false; 
+    render(<OnboardingPopup props = {hidden} />);
+
+    const continueButton = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton);
+
+    const continueButton2 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton2);
+
+    const continueButton3 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton3);
+
+    const continueButton4 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton4);
+
+    const continueButton5 = await screen.findByRole("button", { name: /Continue/i });
+    await user.click(continueButton5);
+
+    const letsGoButton = await screen.findByRole("button", { name: /Let's Go!/i });
+    await user.click(letsGoButton);
+
+    expect(screen.queryByText(/YOU ARE ALL SET!/i)).not.toBeInTheDocument();
   })
 
 });

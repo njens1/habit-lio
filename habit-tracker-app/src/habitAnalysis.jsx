@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { db } from './firebase';
 import { collection, query, onSnapshot, getDoc, getDocs, deleteDoc, doc, orderBy, serverTimestamp, setDoc, updateDoc, addDoc} from 'firebase/firestore'; 
 import { Bar, Pie } from 'react-chartjs-2';
+import CalendarHeatmap from 'react-calendar-heatmap';
+import 'react-calendar-heatmap/dist/styles.css';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend, Filler);
 ChartJS.defaults.scales.linear.ticks.stepSize = 1;
@@ -16,7 +18,7 @@ export default function NewHabitForm({ uid, onClose }) {
   const [barData, setBarData] = useState({ labels: [], datasets: [] });
   const [pieData, setPieData] = useState({ labels: [], datasets: [] });
   const [highestStreak, setHighestStreak] = useState(0);
-
+  
   const overlayStyle = { 
     position: 'fixed',
     top: 0,
@@ -42,7 +44,7 @@ export default function NewHabitForm({ uid, onClose }) {
     position: 'relative'
   };
 
-  useEffect(() => {
+  useEffect(() => { //this is for fetching firestore data and setting it
     if (!uid) return;
     const fetchHabits = async () => {
       try {
@@ -72,12 +74,16 @@ export default function NewHabitForm({ uid, onClose }) {
         setTotalHabits(fetched.length);
         setAvailableYears(Array.from(years).sort((a, b) => b - a));
 
-        // Fake Pie Chart Data
+       const priorities = ['none', 'low', 'medium', 'high'];
+        const priorityCounts = priorities.map(p => 
+          fetched.filter(h => (h.priority || 'none').toLowerCase() === p).length
+        );
+
         setPieData({
-          labels: ['Health', 'Exercise', 'Financial', 'Learning', 'Other'],
+          labels: ['None', 'Low', 'Medium', 'High'],
           datasets: [{
-            data: [3, 1, 2, 0, 4],
-            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+            data: priorityCounts,
+            backgroundColor: ['#8be08b', '#369de2', '#ecbd46', '#f54c71'],
           }]
         });
       } catch (error) { console.error("Error:", error); }
@@ -85,7 +91,7 @@ export default function NewHabitForm({ uid, onClose }) {
     fetchHabits();
   }, [uid]);
 
-  useEffect(() => {
+  useEffect(() => { //this is for changing the year you are looking at
     if (habitsData.length === 0) return;
 
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -111,14 +117,34 @@ export default function NewHabitForm({ uid, onClose }) {
     });
   }, [habitsData, selectedYear]);
 
+
+  const getHeatmapData = () => {
+    const counts = {};
+    habitsData.forEach(habit => {
+      const completions = habit.completions || [];
+      completions.forEach(dateStr => {
+        if (dateStr.startsWith(selectedYear.toString())) {
+          counts[dateStr] = (counts[dateStr] || 0) + 1;
+        }
+      });
+    });
+
+    return Object.keys(counts).map(date => ({
+      date: date,
+      count: counts[date]
+    }));
+  };
+
   return (
     <div style={overlayStyle}>
       <div style={popupStyle}>
+
         <div style={{ position: 'sticky', top: '-30px', backgroundColor: 'white', padding: '10px 0', zIndex: 10, borderBottom: '1px solid #eee', marginBottom: '20px' }}>
           <h2 style={{ margin: 0, textAlign: 'center' }}>Habit Analytics</h2>
           <button onClick={onClose} style={{ position: 'absolute', right: '-25px', top: '-10px', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer' }}>✕</button>
         </div>
 
+        {/*Bar Chart*/}
         <div style={{ marginBottom: '40px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
             <div>
@@ -129,31 +155,46 @@ export default function NewHabitForm({ uid, onClose }) {
               {availableYears.map(y => <option key={y} value={y}>{y}</option>)}
             </select>
           </div>
-          <div style={{ height: '280px' }}>
+          <div style={{ height: '200px' }}>
             <Bar data={barData} options={{ maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }} />
           </div>
         </div>
 
+        {/*Highest Streak*/}
         <div style={{ borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '30px', border: '2px solid black' }}>
-          <div>
-            <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: '500' }}>
-              Current Highest Streak
-            </p>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <span style={{ fontSize: '42px', fontWeight: 'bold', lineHeight: '1' }}>
-              🔥{highestStreak}
-            </span>
+          <div><p style={{ margin: 0, fontSize: '18px', fontWeight: '500' }}>Current Highest Streak</p></div>
+          <div style={{ textAlign: 'right' }}><span style={{ fontSize: '42px', fontWeight: 'bold' }}>🔥{highestStreak}</span></div>
+        </div>
+
+        {/*Yearly Completion Map*/}
+        <div style={{ marginBottom: '40px', padding: '10px' }}>
+          <h3 style={{ fontSize: '16px', marginBottom: '15px' }}>Consistency Map ({selectedYear})</h3>
+          <div className="heatmap-container">
+            <CalendarHeatmap
+              startDate={new Date(`${selectedYear}-01-01`)}
+              endDate={new Date(`${selectedYear}-12-31`)}
+              values={getHeatmapData()}
+
+              classForValue={(value) => {
+                if (!value || value.count === 0) return 'color-empty';
+                return `color-scale-${Math.min(value.count, 4)}`;
+              }}
+
+              titleForValue={(value) => {
+                if (!value) return `No habits completed`;
+                return `${value.count} habits completed on ${value.date}`;
+              }}
+            />
           </div>
         </div>
 
+        {/*Pie Chart*/}
         <div style={{ borderTop: '1px solid #eee', paddingTop: '30px', textAlign: 'center' }}>
-          <h3 style={{ marginBottom: '20px' }}>Category Distribution</h3>
-          <div style={{ height: '300px', display: 'flex', justifyContent: 'center' }}>
+          <h3 style={{ marginBottom: '20px' }}>Priority Distribution</h3>
+          <div style={{ height: '250px', display: 'flex', justifyContent: 'center' }}>
             <Pie data={pieData} options={{ maintainAspectRatio: false }} />
           </div>
         </div>
-
         <div style={{ height: '20px' }}></div>
       </div>
     </div>

@@ -25,7 +25,6 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage }) {
           <Medal color="black" />
         </button>
         <span className="divider" />
-        <button id="users-btn" title="Friends">
         <button id="users-btn" title="Friends" onClick={() => setShowFriendsPage(true)}>
           {" "}
           <Users color="black" />{" "}

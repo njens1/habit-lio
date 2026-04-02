@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { getAuth } from "firebase/auth";
+import { getAuth, updateProfile } from "firebase/auth";
 import {
   getFirestore,
   doc,
@@ -243,13 +243,14 @@ function Profile({ uid, onClose }) {
         updates.avatar = editAvatar;
       }
       await updateDoc(doc(db, "users", uid), updates);
+      await updateProfile(user, { displayName: editName });
       setDisplayName(editName);
       setBio(editBio);
       setIsPublic(editPublic);
       setAvatar(editAvatar);
       setShowEdit(false);
     } catch (err) {
-      setSaveError("Failed to save. Please try again.");
+      setSaveError("Failed to save. Please try again." + err);
     } finally {
       setSaving(false);
     }

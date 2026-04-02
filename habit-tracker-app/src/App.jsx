@@ -100,7 +100,19 @@ function App() {
         setAuthError(""); // clear error
       } else {
         // SIGN UP
-        await createUserWithEmailAndPassword(auth, email, password);
+        const result = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password,
+        );
+        await createUserProfile(result.user.uid, {
+          email: result.user.email,
+          displayName: "",
+          bio: "",
+          isPublic: false,
+          avatar: null,
+          earnedBadges: [],
+        });
         setAuthError("");
       }
     } catch (err) {

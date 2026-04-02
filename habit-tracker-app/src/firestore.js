@@ -9,10 +9,34 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
-  addDoc
+  addDoc,
+  where,
+  limit
 } from "firebase/firestore";
 
 import { db } from "./firebase";
+
+// Search for users by username
+export const searchUsers = async (searchString) => {
+  if (!searchString.trim()) return [];
+  try {
+    const q = query(
+        collection(db, "users"),
+        where("username", ">=", searchString.toLowerCase()),
+        where("username", "<=", searchString.toLowerCase() + "\uf8ff"),
+        limit(10)
+    );
+
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map((doc) => ({
+      uid: doc.id,
+      ...doc.data(),
+    }));
+  } catch (error) {
+    console.error("Error searching users:", error);
+    return [];
+  }
+};
 
 export const createUserProfile = async (uid, { email, displayName }) => {
   const userRef = doc(db, "users", uid);

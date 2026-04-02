@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import {
   UserPlus,
   Search,
@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import "./index.css";
 import "./FriendsPage.css";
+import { searchUsers } from "./firestore";
+
 
 // -- Using fake information for now -----------------------------
 const friends = [
@@ -69,15 +71,24 @@ const FriendCard = ({ friend, onClick }) => (
 // -- Friends List/Search -------------------------------------------------------------
 const FriendsList = ({ onFriendClick, onRequestsClick, requestCount }) => {
   const [search, setSearch] = useState("");
-
+  const [searchResults, setSearchResults] = useState([]);
   const hasInput = search.trim().length > 0;
-
-  const searchResults = hasInput
-    ? ALL_USERS.filter((u) =>
-        // u.name.toLowerCase().includes(search.toLowerCase()) ||
-        u.username.toLowerCase().includes(search.toLowerCase()),
-      )
-    : [];
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (hasInput) {
+        try {
+          const results = await searchUsers(search);
+          setSearchResults(results);
+        } catch (err) {
+          console.error("Search error:", err);
+        }
+      } else {
+        setSearchResults([]);
+      }
+    };
+    const timer = setTimeout(fetchUsers, 300);
+    return () => clearTimeout(timer);
+  }, [search, hasInput]);
 
   return (
     <div id="friends-page">

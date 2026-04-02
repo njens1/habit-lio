@@ -2,10 +2,12 @@ import { House, Users, Settings, Mail } from "lucide-react";
 import "./App.css";
 import HabitCreate from "./habitCreate";
 import { useState } from "react";
-import SettingsPopup from "./settingsMenuPopup";
+import SettingsPopup from "./Settings.jsx";
+import Badges from "./Badges.jsx";
 
 function Menu({ onHomeClick, addHabit, setShowFriendsPage }) {
   const [showSettings, setShowSettings] = useState(false);
+  const [showBadges, setShowBadges] = useState(false);
   return (
     <>
       <div id="menu">
@@ -15,12 +17,22 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage }) {
           <House color="black" />{" "}
         </button>{" "}
         <span className="divider"></span>{" "}
+        <button
+          id="badges-btn"
+          title="Badges"
+          onClick={() => setShowBadges(true)}
+        >
+          <Medal color="black" />
+        </button>
+        <span className="divider" />
         <button id="users-btn" title="Friends" onClick={() => setShowFriendsPage(true)}>
           {" "}
           <Users color="black" />{" "}
         </button>{" "}
         <span className="divider"></span>
-        <HabitCreate addHabit={addHabit} /> <span className="divider"></span>{" "}
+        <HabitCreate
+          addHabit={addHabit}
+        /> <span className="divider"></span>{" "}
         <button id="mail-btn" title="Messages">
           {" "}
           <Mail color="black" />{" "}
@@ -38,6 +50,14 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage }) {
 
       {showSettings && (
         <SettingsPopup closePopup={() => setShowSettings(false)} />
+      )}
+
+      {showBadges && (
+        <Badges
+          uid={uid}
+          habits={habits}
+          onClose={() => setShowBadges(false)}
+        />
       )}
     </>
   );

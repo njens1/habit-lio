@@ -146,15 +146,19 @@ function App() {
         setAuthError(""); // clear error
       } else {
         // SIGN UP
-        const result = await createUserWithEmailAndPassword(auth, email, password);
-
-        // CREATE THE FIRESTORE DOCUMENT
+        const result = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password,
+        );
         await createUserProfile(result.user.uid, {
           email: result.user.email,
-          displayName: "", // You can update this later in onboarding
-          onboarded: false // Set initial onboarding status
+          displayName: "",
+          bio: "",
+          isPublic: false,
+          avatar: null,
+          earnedBadges: [],
         });
-
         setAuthError("");
       }
     } catch (err) {

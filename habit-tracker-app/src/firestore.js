@@ -11,7 +11,7 @@ import {
   updateDoc,
   addDoc,
   where,
-  limit
+  limit,
 } from "firebase/firestore";
 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -23,10 +23,10 @@ export const searchUsers = async (searchString) => {
   if (!searchString.trim()) return [];
   try {
     const q = query(
-        collection(db, "users"),
-        where("username", ">=", searchString.toLowerCase()),
-        where("username", "<=", searchString.toLowerCase() + "\uf8ff"),
-        limit(10)
+      collection(db, "users"),
+      where("username", ">=", searchString.toLowerCase()),
+      where("username", "<=", searchString.toLowerCase() + "\uf8ff"),
+      limit(10),
     );
 
     const querySnapshot = await getDocs(q);
@@ -40,16 +40,23 @@ export const searchUsers = async (searchString) => {
   }
 };
 
-export const createUserProfile = async (uid, { email, displayName }) => {
+export const createUserProfile = async (
+  uid,
+  { email, displayName, bio, isPublic, avatar, earnedBadges },
+) => {
   const userRef = doc(db, "users", uid);
   await setDoc(
     userRef,
     {
       email: email || null,
       displayName: displayName || null,
-      createdAt: serverTimestamp()
+      bio: bio || "",
+      isPublic: isPublic || false,
+      avatar: avatar || null,
+      earnedBadges: earnedBadges || [],
+      createdAt: serverTimestamp(),
     },
-    { merge: true }
+    { merge: true },
   );
 
   return userRef;
@@ -61,13 +68,12 @@ export const getUserProfile = async (uid) => {
   return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
 };
 
-
 // Create Habits
 export const createHabit = async (uid, habit) => {
   const habitsRef = collection(db, "users", uid, "habits");
 
   // Clear days array based on task days mode that wasn't selected.
-  if(habit.goal.taskDays !== "specific_days") {
+  if (habit.goal.taskDays !== "specific_days") {
     habit.goal.daysSelected = [];
   } else if (habit.goal.taskDays !== "specific_month_days") {
     habit.goal.daysInMonthSelected = [];
@@ -89,28 +95,28 @@ export const createHabit = async (uid, habit) => {
     lastCompletedDate: null,
     completions: [],
     createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp()
+    updatedAt: serverTimestamp(),
   };
 
   const docRef = await addDoc(habitsRef, habitDoc);
   if (habit.reminder?.activated) {
-    const [hours, minutes] = habit.reminder.time.split(':');
+    const [hours, minutes] = habit.reminder.time.split(":");
     const now = new Date();
     const alarmTime = new Date();
     alarmTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
     // If time already passed today, set for tomorrow
     if (alarmTime <= now) {
-        alarmTime.setDate(now.getDate() + 1);
+      alarmTime.setDate(now.getDate() + 1);
     }
 
-    const stringifyName = docRef.id + "|" + habit.reminder.message 
-    + "|" + habit.name; // Combine message and habit name for later use
+    const stringifyName =
+      docRef.id + "|" + habit.reminder.message + "|" + habit.name; // Combine message and habit name for later use
     // Schedule repeating alarm every 24 hours
     // Switch back to createdHabit.name if it doesn't work
     chrome.alarms.create(stringifyName, {
-        when: alarmTime.getTime(),
-        periodInMinutes: 1440 // 24 hours
+      when: alarmTime.getTime(),
+      periodInMinutes: 1440, // 24 hours
     });
   }
   return docRef;
@@ -125,11 +131,16 @@ export const handleSaveHabit = async (user, updatedHabit) => {
     console.log("updatedHabit.id:", updatedHabit.id);
     const habitRef = doc(db, "users", user.uid, "habits", updatedHabit.id);
 
-    const stringifyName = updatedHabit.id + "|" + updatedHabit.reminder.message + "|" + updatedHabit.name; // Combine message and habit name for later use
+    const stringifyName =
+      updatedHabit.id +
+      "|" +
+      updatedHabit.reminder.message +
+      "|" +
+      updatedHabit.name; // Combine message and habit name for later use
     chrome.alarms.clear(stringifyName); // Clear any associated alarms
 
     // Clear days array based on task days mode that wasn't selected.
-    if(updatedHabit.goal.taskDays !== "specific_days") {
+    if (updatedHabit.goal.taskDays !== "specific_days") {
       updatedHabit.goal.daysSelected = [];
     } else if (updatedHabit.goal.taskDays !== "specific_month_days") {
       updatedHabit.goal.daysInMonthSelected = [];
@@ -142,7 +153,11 @@ export const handleSaveHabit = async (user, updatedHabit) => {
       emoji: updatedHabit.emoji || "📝",
       type: updatedHabit.type || "General",
       goal: updatedHabit.goal || { value: 1, unit: "minute" },
-      reminder: updatedHabit.reminder || {activated: false, time: "", message: ""},
+      reminder: updatedHabit.reminder || {
+        activated: false,
+        time: "",
+        message: "",
+      },
       priority: updatedHabit.priority || "none",
       startDate: updatedHabit.startDate || null,
       endDate: updatedHabit.endDate || null,
@@ -154,30 +169,34 @@ export const handleSaveHabit = async (user, updatedHabit) => {
     });
 
     if (updatedHabit.reminder?.activated) {
-      const [hours, minutes] = updatedHabit.reminder.time.split(':');
+      const [hours, minutes] = updatedHabit.reminder.time.split(":");
       const now = new Date();
       const alarmTime = new Date();
       alarmTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
       // If time already passed today, set for tomorrow
       if (alarmTime <= now) {
-          alarmTime.setDate(now.getDate() + 1);
+        alarmTime.setDate(now.getDate() + 1);
       }
 
-      const stringifyName = habitRef.id + "|" + updatedHabit.reminder.message 
-      + "|" + updatedHabit.name; // Combine message and habit name for later use
+      const stringifyName =
+        habitRef.id +
+        "|" +
+        updatedHabit.reminder.message +
+        "|" +
+        updatedHabit.name; // Combine message and habit name for later use
       // Schedule repeating alarm every 24 hours
       // Switch back to createdHabit.name if it doesn't work
       chrome.alarms.create(stringifyName, {
-          when: alarmTime.getTime(),
-          periodInMinutes: 1440 // 24 hours
+        when: alarmTime.getTime(),
+        periodInMinutes: 1440, // 24 hours
       });
     }
     
   } catch (error) {
     console.error("Failed to update habit:", error);
   }
-}
+};
 
 export const listHabits = async (uid) => {
   const habitsRef = collection(db, "users", uid, "habits");
@@ -186,7 +205,7 @@ export const listHabits = async (uid) => {
 
   return snapshot.docs.map((docItem) => ({
     id: docItem.id,
-    ...docItem.data()
+    ...docItem.data(),
   }));
 };
 
@@ -194,25 +213,25 @@ export const updateHabit = async (uid, habitId, updates) => {
   const habitRef = doc(db, "users", uid, "habits", habitId);
   await updateDoc(habitRef, {
     ...updates,
-    updatedAt: serverTimestamp()
+    updatedAt: serverTimestamp(),
   });
 };
 
 export const deleteHabit = async (uid, habit) => {
   const habitRef = doc(db, "users", uid, "habits", habit.id);
-  const stringifyName = habit.id + "|" + habit.reminder.message + "|" + habit.name; // Combine message and habit name for later use
+  const stringifyName =
+    habit.id + "|" + habit.reminder.message + "|" + habit.name; // Combine message and habit name for later use
   chrome.alarms.clear(stringifyName); // Clear any associated alarms
   await deleteDoc(habitRef);
 };
 
-
 export const exportHabits = async (uid) => {
   const habitsRef = collection(db, "users", uid, "habits");
-  
+
   try {
     const q = query(habitsRef);
     const querySnapshot = await getDocs(q);
-    
+
     const habitsData = [];
     querySnapshot.forEach((doc) => {
       habitsData.push({ id: doc.id, ...doc.data() });
@@ -225,27 +244,29 @@ export const exportHabits = async (uid) => {
 
     const headers = Object.keys(habitsData[0]);
     const csvRows = [];
-    csvRows.push(headers.join(',')); // make headers row
+    csvRows.push(headers.join(",")); // make headers row
 
     for (const row of habitsData) {
-      const values = headers.map(header => {
+      const values = headers.map((header) => {
         let val = row[header];
 
         // checks if the value is a firestore timestamp object
-        if (val && typeof val.toDate === 'function') {
+        if (val && typeof val.toDate === "function") {
           const date = val.toDate();
-      
+
           //this is for formating the data to match the date format that firestore uses
-          val = new Intl.DateTimeFormat('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            second: '2-digit',
+          val = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
             hour12: true,
-            timeZoneName: 'shortOffset' // this is for the "UTC-6" part of the date
-          }).format(date).replace(',', ' at'); 
+            timeZoneName: "shortOffset", // this is for the "UTC-6" part of the date
+          })
+            .format(date)
+            .replace(",", " at");
         }
 
         // cleans up any quotes or whitespaces in data
@@ -253,40 +274,38 @@ export const exportHabits = async (uid) => {
         const escaped = stringVal.replace(/"/g, '""');
         return `"${escaped}"`;
       });
-      csvRows.push(values.join(','));
+      csvRows.push(values.join(","));
     }
-    const csvString = csvRows.join('\n');
-    
-    //DOWNLOAD TRIGGERED HERE
-    downloadCSV(csvString, 'habits.csv');
-    console.log("Habits exported successfully!");
+    const csvString = csvRows.join("\n");
 
+    //DOWNLOAD TRIGGERED HERE
+    downloadCSV(csvString, "habits.csv");
+    console.log("Habits exported successfully!");
   } catch (error) {
     console.error("Error exporting habits:", error);
   }
-
 };
 
-export const downloadCSV = async(csv, filename) => {
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
+export const downloadCSV = async (csv, filename) => {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
 
-    link.setAttribute("href", url);
-    link.setAttribute("download", filename);
-    link.style.visibility = 'hidden';
+  link.setAttribute("href", url);
+  link.setAttribute("download", filename);
+  link.style.visibility = "hidden";
 
-    document.body.appendChild(link);
-    link.click();
+  document.body.appendChild(link);
+  link.click();
 
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-}
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
 
 // Helper function to get today's date in YYYY-MM-DD format
 const getTodayDate = () => {
   const today = new Date();
-  return today.toISOString().split('T')[0];
+  return today.toISOString().split("T")[0];
 };
 
 // Calculate streak based on completion history
@@ -294,12 +313,14 @@ export const calculateStreak = (completions) => {
   if (!completions || completions.length === 0) return 0;
 
   // Sort completions by date (most recent first)
-  const sortedDates = [...completions].sort((a, b) => new Date(b) - new Date(a));
+  const sortedDates = [...completions].sort(
+    (a, b) => new Date(b) - new Date(a),
+  );
 
   const today = getTodayDate();
   const mostRecent = sortedDates[0];
   const daysSinceLast = Math.floor(
-    (new Date(today) - new Date(mostRecent)) / (1000 * 60 * 60 * 24)
+    (new Date(today) - new Date(mostRecent)) / (1000 * 60 * 60 * 24),
   );
 
   if (daysSinceLast > 1) return 0;
@@ -330,34 +351,34 @@ export const calculateStreak = (completions) => {
 export const toggleHabitCompletion = async (uid, habitId) => {
   const habitRef = doc(db, "users", uid, "habits", habitId);
   const habitDoc = await getDoc(habitRef);
-  
+
   if (!habitDoc.exists()) {
     throw new Error("Habit not found");
   }
-  
+
   const habitData = habitDoc.data();
   const today = getTodayDate();
   const completions = habitData.completions || [];
-  
+
   let updatedCompletions;
   let isCompleted;
-  
+
   if (completions.includes(today)) {
-    updatedCompletions = completions.filter(date => date !== today);
+    updatedCompletions = completions.filter((date) => date !== today);
     isCompleted = false;
   } else {
     updatedCompletions = [...completions, today];
     isCompleted = true;
   }
-  
+
   // Only write completions; streak is calculated server-side by Cloud Function
   await updateDoc(habitRef, {
     completions: updatedCompletions,
-    updatedAt: serverTimestamp()
+    updatedAt: serverTimestamp(),
   });
-  
+
   const localStreak = calculateStreak(updatedCompletions);
-  
+
   return { isCompleted, streak: localStreak };
 };
 

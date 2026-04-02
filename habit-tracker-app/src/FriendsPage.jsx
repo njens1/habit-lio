@@ -157,7 +157,7 @@ const FriendRequestsModal = ({
       <div id="requests-modal-header">
         <span id="requests-modal-title">Friend Requests</span>
         <button id="requests-modal-close" onClick={onClose}>
-          x
+          ✕
         </button>
       </div>
 

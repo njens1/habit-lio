@@ -33,7 +33,7 @@ import Messages from "./Messages";
 import { AuthContext } from "./AuthContext";
 import Onboarding from "./onboarding/Onboarding.jsx";
 import Affirmation from "./onboarding/affirmation.jsx";
-import Messages from "./Messages.jsx";
+// import Messages from "./Messages.jsx";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -281,7 +281,7 @@ function App() {
                     alignItems: "center",
                   }}
                 >
-                  <Affirmation affirmations={affirmations} />
+                  <Affirmation user={user} affirmations={affirmations} />
                 </div>
 
                 {showFriendsPage && (

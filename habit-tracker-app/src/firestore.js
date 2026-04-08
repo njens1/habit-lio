@@ -433,7 +433,9 @@ export const getUserInfo = async (uid, specificItem) => {
   
   if (!snapshot.exists()) return null;
   
-  const userInfo = snapshot.data().userInfo;
+  const data = snapshot.data();
+  // Ensure userInfo exists before trying to access keys inside it
+  const userInfo = data.userInfo || {}; 
 
   if (!userInfo || typeof userInfo !== "object") {
     return null;
@@ -444,8 +446,9 @@ export const getUserInfo = async (uid, specificItem) => {
     return userInfo[specificItem];
   }
 
-  // Fallback if the key doesn't exist
-  return userInfo; 
+  // If you asked for "affirmations" but it's not there, 
+  // return an empty array instead of the whole userInfo object.
+  return specificItem === "affirmations" ? [] : ""; 
 };
 
 export const checkUsernameExists = async (username) => {

@@ -15,6 +15,10 @@ import {
   getOnboardingStatus,
   getUserInfo
 } from "./firestore";
+
+// import{
+//   loadAffirmations
+// } from "./second-firestore";
 import "./App.css";
 import "./Login.css";
 // import icons from Lucide React
@@ -29,7 +33,7 @@ import Messages from "./Messages";
 import { AuthContext } from "./AuthContext";
 import Onboarding from "./onboarding/Onboarding.jsx";
 import Affirmation from "./onboarding/affirmation.jsx";
-import Messages from "./Messages.jsx";
+// import Messages from "./Messages.jsx";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -47,6 +51,7 @@ function App() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alreadyOnboarded, setAlreadyOnboarded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   // Load in the habits for the user,
   // called after login and after edits/deletes to refresh the habit list
@@ -68,6 +73,9 @@ function App() {
 
       const getAffirmations = await getUserInfo(uid, "affirmations");
       setAffirmations(getAffirmations);
+      console.log("Affirmations: ", getAffirmations);
+      setLoaded(true);
+
     } catch (error) {
       console.error("Error loading habits:", error);
     }
@@ -82,6 +90,7 @@ function App() {
         // console.log("Username set: ", username);
       } else {
         setHabits([]);
+        setLoaded(true);
       }
     });
 
@@ -232,6 +241,13 @@ function App() {
     <AuthContext.Provider value={user}>
       <div className="card">
         {user ? (
+        // Check if data is loaded before showing the dashboard
+        !loaded ? (
+          <div className="loading-container">
+            <div className="loading-bar" >
+            </div>
+          </div>
+        ) : (
           <div>
              { !alreadyOnboarded &&
               <Onboarding hidden={alreadyOnboarded} user={user} 
@@ -265,7 +281,7 @@ function App() {
                     alignItems: "center",
                   }}
                 >
-                  <Affirmation affirmations={affirmations} />
+                  <Affirmation user={user} affirmations={affirmations} />
                 </div>
 
                 {showFriendsPage && (
@@ -377,9 +393,16 @@ function App() {
               </div>
             )}
           </div>
+        )
         ) : (
           // sign in/sign up
           <div>
+            {!loaded ? (
+              <div className="loading-container">
+                <div className="loading-bar" >
+                </div>
+              </div>
+            ) : (
             <div id="login-container">
               <h1>{isSignUp ? "Welcome Back" : "Create Account"}</h1>
               <h2 id="login-subtitle">
@@ -443,6 +466,7 @@ function App() {
               <br />
               <script type="module" src="login.js"></script>
             </div>
+            )}
           </div>
         )}
       </div>

@@ -1,11 +1,26 @@
 
 import "../css/Affirmation.css";
+import { useEffect, useState } from "react";
+import AffirmationEditing from "./AffirmationEditing";
 
-function Affirmation({ affirmations }) {
+function Affirmation({ user, affirmations }) {
+  const [userOpened, setuserOpened] = useState(user);
+  const [visible, setVisible] = useState(false);
+  const [affirmationsList, setAffirmationsList] = useState(affirmations);
+  useEffect(() => {
+    setAffirmationsList(affirmations);
+    setuserOpened(user);
+  }, [affirmations], [user]); // Update local state when props change
+  
   return (
     <div id="today-affirmation-container">
+        <AffirmationEditing user={userOpened} visible={visible} 
+        setVisible={setVisible} affirmations={affirmationsList} />
         <h2>Today's Affirmation:</h2>
-        <p>{affirmations[Math.floor(Math.random() * affirmations.length)]}</p>
+        <p>{affirmationsList[Math.floor(Math.random() * affirmationsList.length)]}</p>
+        <button id="edit-affirmations" onClick={() => setVisible(!visible)}>
+          Edit Affirmations✏️
+        </button>
     </div>
   );
 }

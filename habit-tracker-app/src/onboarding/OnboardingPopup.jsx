@@ -92,7 +92,7 @@ function Page3({currentPage, setCurrentPage, user}){
     return(
         <div className="onboarding-wrapper" hidden = {currentPage !== pageName}>
         <div className = "onboarding-content">
-            <h1>Add a Profile Picture (Optional)</h1>
+            <h1>Add a Profile Picture</h1>
             <p>Upload a profile picture to personalize your experience.</p>
             <p>Let the world know who you are!!</p>
             <label htmlFor="profile-picture" className="required">Upload Profile Picture</label>

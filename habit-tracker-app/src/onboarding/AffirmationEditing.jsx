@@ -3,25 +3,47 @@ import "../css/Affirmation.css";
 import { useState } from "react";
 import { useEffect } from "react";
 import { saveAffirmations } from "../second-firestore";
+import{Lightbulb} from "lucide-react";
+import { generateAffirmations } from "../gemini";
 // import AffirmationEditing from "./AffirmationEditing";
 
 function AffirmationInput({index, affirmation, setAffirmations}){
+
+    const [disabled, setDisabled] = useState(false);
+
+    const generateAffirmation = async () => {
+        setDisabled(true);
+        const response = await generateAffirmations();
+        console.log("Generated Affirmation: ", response);
+        setDisabled(false);
+    }
+
     return(
         <div>
             <label htmlFor={`affirmation-${index}`}><b>Positive Affirmation {index + 1}</b></label>
             <p>(100 Characters or Less)</p>
-            <input type="text" id={`affirmation-${index}`} name={`affirmation-${index}`} 
-            placeholder={`Affirmation ${index + 1}`} 
-            maxlength = "100"
-            aria-label={`Positive Affirmation ${index + 1}`}
-            value={affirmation}
-            onChange={(e) => {
-                setAffirmations((prevAffirmations) => {
-                    const newAffirmations = [...prevAffirmations];
-                    newAffirmations[index] = e.target.value;
-                    return newAffirmations;
-                }
-                )}}/>
+            <div className="affirmation-input-container">
+                <div className="affirmation-input-inner">
+                    <input type="text" id={`affirmation-${index}`} name={`affirmation-${index}`} 
+                    placeholder={`Affirmation ${index + 1}`} 
+                    maxlength = "100"
+                    aria-label={`Positive Affirmation ${index + 1}`}
+                    value={affirmation}
+                    onChange={(e) => {
+                        setAffirmations((prevAffirmations) => {
+                            const newAffirmations = [...prevAffirmations];
+                            newAffirmations[index] = e.target.value;
+                            return newAffirmations;
+                        }
+                        )}}/>
+                        <button id="generate-affirmation-btn" title="Generate Affirmation" 
+                        disabled={disabled}
+                        onClick={() => {
+                            // Logic for generating affirmation
+                            generateAffirmation();
+                        }}><Lightbulb /></button>
+                </div>
+            </div>
                 <br />
                 <br />
         </div>

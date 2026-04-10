@@ -1,3 +1,7 @@
+/*
+  firestore.js implements changes to be shown within the database after a user makes changes
+ */
+
 import {
   collection,
   deleteDoc,

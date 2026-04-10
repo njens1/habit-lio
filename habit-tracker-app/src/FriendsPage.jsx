@@ -1,3 +1,7 @@
+/*
+  FriendsPage.jsx manages social networking
+ */
+
 import {useEffect, useState} from "react";
 import {
   UserPlus,

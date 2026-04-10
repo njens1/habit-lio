@@ -1,3 +1,7 @@
+/*
+    main.jsx connects the App component to HTML elements. Strict mode for handling resources properly
+ */
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'

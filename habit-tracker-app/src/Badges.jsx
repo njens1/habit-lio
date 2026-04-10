@@ -1,3 +1,7 @@
+/*
+  Badges.jsx is the actual popup that is reflected in the habit tracker using the Badgedefinitions.js
+ */
+
 import { useEffect, useState } from "react";
 import { BADGES, checkBadges } from "./badgeDefinitions";
 import { getEarnedBadges, saveEarnedBadges } from "./firestore";

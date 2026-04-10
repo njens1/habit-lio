@@ -1,3 +1,7 @@
+/*
+  App.jsx is the entry point of the habit tracker, holding the global state and routing to other files
+ */
+
 import { useState, useEffect, use } from "react";
 import {
   GoogleAuthProvider,
@@ -118,6 +122,7 @@ function App() {
   // This means "Re-check status whenever the logged-in user changes"
 }, [user]); 
 
+  // Allows for Google authentication for Google user sign-in
   const handleGoogleAuth = () => {
     chrome.identity.clearAllCachedAuthTokens(() => {
       // cleared cache tokens because of errors without it
@@ -148,6 +153,7 @@ function App() {
     });
   };
 
+  // Used for handling email sign-in outside of Google sign-in option
   const handleEmailAuth = async (e) => {
     e.preventDefault();
     try {
@@ -206,6 +212,7 @@ function App() {
     }
   };
 
+  // wrapper for saving a habit into the database
   const addHabit = async (habit) => {
     if (!user) return;
 

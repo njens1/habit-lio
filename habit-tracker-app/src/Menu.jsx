@@ -1,3 +1,7 @@
+/*
+  Menu.jsx is a navigation bar for transitions between pages
+ */
+
 import { House, Users, Settings, Mail, Medal, CircleUser } from "lucide-react";
 import "./App.css";
 import Profile from "./Profile.jsx";

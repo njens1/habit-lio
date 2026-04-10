@@ -1,3 +1,7 @@
+/*
+  Profile.jsx contains user information and habit analysis
+ */
+
 import { useEffect, useState, useRef } from "react";
 import { getAuth, updateProfile } from "firebase/auth";
 import {

@@ -1,4 +1,6 @@
-// we can think of better names for the badges later
+/*
+    Badgedefinitions.js holds the badges a user can earn while checking for badge completion given a specified criteria
+ */
 
 export const BADGES = [
     {

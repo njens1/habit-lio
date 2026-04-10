@@ -1,3 +1,7 @@
+/*
+  habitCreate.jsx is used for handling user habit creation for both custom and preselected habits
+ */
+
 import { useState } from "react";
 import { auth } from "./firebase";
 import { useContext } from "react";

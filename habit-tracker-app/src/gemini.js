@@ -1,3 +1,7 @@
+/*
+    gemini.js integrates the Gemini AI SDK for affirmation generation
+ */
+
 import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });

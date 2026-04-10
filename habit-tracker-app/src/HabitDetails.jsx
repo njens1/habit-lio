@@ -1,3 +1,7 @@
+/*
+    HabitDetails.jsx handles the information stored within a habit
+ */
+
 import { useState, useEffect, useRef } from "react";
 import { useContext } from "react";
 import { AuthContext } from "./AuthContext";

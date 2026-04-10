@@ -1,3 +1,7 @@
+/*
+  Settings.jsx holds all settings options for users including, password changes, habit export, and account deletion
+ */
+
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import {

@@ -1,3 +1,7 @@
+/*
+  second-firestore.js is used for saving affirmations in userInfo
+ */
+
 import {
   collection,
   deleteDoc,

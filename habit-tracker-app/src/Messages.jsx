@@ -1,3 +1,7 @@
+/*
+    Messages.jsx handles the messaging between users
+ */
+
 import { useState, useEffect, useRef } from "react";
 import { Search, CircleEllipsis, SendHorizonal } from "lucide-react";
 import "./index.css";

@@ -1,3 +1,7 @@
+/*
+    Login.jsx handles current user connection to the extension
+ */
+
 import { useState, useEffect } from "react";
 import { GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";

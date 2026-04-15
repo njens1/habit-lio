@@ -158,18 +158,31 @@ export const listIncomingRequests = async (uid) => {
   );
 
   const snapshot = await getDocs(requestQuery);
-  return snapshot.docs
-    .map((docItem) => {
-      const data = docItem.data();
-      return {
-        id: docItem.id,
-        requestId: docItem.id,
-        uid: data.senderUid,
-        username: data.senderUsername || "",
-        ...data,
-      };
-    })
-    .filter((requestItem) => requestItem.status === "pending");
+  const pending = snapshot.docs
+    .map((docItem) => ({
+      id: docItem.id,
+      requestId: docItem.id,
+      ...docItem.data(),
+    }))
+    .filter((r) => r.status === "pending");
+
+  const userDocs = await Promise.all(
+    pending.map((r) => getDoc(doc(db, "users", r.senderUid))),
+  );
+
+  return pending.map((r, i) => {
+    const userData = userDocs[i].exists() ? userDocs[i].data() : {};
+    return {
+      ...r,
+      uid: r.senderUid,
+      username:
+        userData.username ||
+        userData.userInfo?.username ||
+        r.senderUsername ||
+        "",
+      profilePictureUrl: userData.profilePictureUrl || "",
+    };
+  });
 };
 
 export const listOutgoingRequests = async (uid) => {
@@ -315,12 +328,20 @@ export const listFriends = async (uid) => {
   const friendsRef = collection(db, "users", currentUserId, "friends");
   const snapshot = await getDocs(friendsRef);
 
-  return snapshot.docs.map((docItem) => ({
-    id: docItem.id,
-    ...docItem.data(),
-    uid: docItem.data().friendUid || docItem.id,
-    username: docItem.data().username || "",
-  }));
+  const friendDocs = await Promise.all(
+    snapshot.docs.map((docItem) => {
+      const friendUid = docItem.data().friendUid || docItem.id;
+      return getDoc(doc(db, "users", friendUid));
+    }),
+  );
+
+  return friendDocs
+    .filter((d) => d.exists())
+    .map((d) => ({
+      uid: d.id,
+      username: d.data().username || d.data().userInfo?.username || "",
+      profilePictureUrl: d.data().profilePictureUrl || "",
+    }));
 };
 
 export const removeFriend = async (friendUid, uid) => {

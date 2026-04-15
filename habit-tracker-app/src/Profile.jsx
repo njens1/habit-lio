@@ -217,10 +217,6 @@ function Profile({ uid, onClose }) {
   const handleAvatarUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (file.size > 150 * 1024) {
-      setSaveError("Image must be under 150KB.");
-      return;
-    }
     const reader = new FileReader();
     reader.onload = (ev) => setEditAvatar(ev.target.result);
     reader.readAsDataURL(file);
@@ -278,11 +274,7 @@ function Profile({ uid, onClose }) {
               onClick={() => fileInputRef.current.click()}
             >
               {editAvatar ? (
-                <img
-                  src={editAvatar}
-                  alt="avatar"
-                  className="profile-avatar-large"
-                />
+                <img src={editAvatar} className="profile-avatar-large" />
               ) : (
                 <div className="profile-avatar-placeholder large">?</div>
               )}
@@ -307,6 +299,11 @@ function Profile({ uid, onClose }) {
                 <span className="profile-toggle-slider" />
               </label>
             </div>
+            <p className="profile-toggle-hint">
+              {editPublic
+                ? "Others can find and send you friend requests."
+                : "Your profile is private. You can still send friend requests, but others cannot send them to you."}
+            </p>
 
             <input
               className="profile-input"
@@ -328,7 +325,7 @@ function Profile({ uid, onClose }) {
 
             <div className="profile-edit-buttons">
               <button onClick={handleSave} disabled={saving}>
-                {saving ? "Saving…" : "Save"}
+                {saving ? "Saving..." : "Save"}
               </button>
               <button onClick={() => setShowEdit(false)}>Cancel</button>
             </div>
@@ -338,7 +335,7 @@ function Profile({ uid, onClose }) {
           <>
             <div className="profile-header">
               {avatar ? (
-                <img src={avatar} alt="avatar" className="profile-avatar" />
+                <img src={avatar} className="profile-avatar" />
               ) : (
                 <div className="profile-avatar-placeholder">?</div>
               )}

@@ -2,7 +2,7 @@
   FriendsPage.jsx manages social networking
  */
 
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import {
   UserPlus,
   Search,
@@ -34,7 +34,13 @@ const FriendCard = ({ friend, onClick }) => (
         alignItems: "center",
       }}
     >
-      <div id="friend-picture"></div>
+      <div className="friend-picture">
+        {friend.profilePictureUrl ? (
+          <img src={friend.profilePictureUrl} />
+        ) : (
+          <div className="friend-picture-placeholder">?</div>
+        )}
+      </div>
       <div>
         {/* <div className="friend-card-name">{friend.name}</div> */}
         <div className="friend-card-username">@{friend.username}</div>
@@ -44,7 +50,12 @@ const FriendCard = ({ friend, onClick }) => (
 );
 
 // -- Friends List/Search -------------------------------------------------------------
-const FriendsList = ({ onFriendClick, onRequestsClick, requestCount, friends }) => {
+const FriendsList = ({
+  onFriendClick,
+  onRequestsClick,
+  requestCount,
+  friends,
+}) => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const hasInput = search.trim().length > 0;
@@ -102,7 +113,15 @@ const FriendsList = ({ onFriendClick, onRequestsClick, requestCount, friends }) 
                 >
                   <div className="search-dropdown-info">
                     {/* <div className="search-dropdown-name">{user.name}</div> */}
-                    <div className="search-dropdown-picture"></div>
+                    <div className="search-dropdown-picture">
+                      {user.profilePictureUrl ? (
+                        <img src={user.profilePictureUrl} />
+                      ) : (
+                        <div classname="search-dropdown-picture-placeholder">
+                          ?
+                        </div>
+                      )}
+                    </div>
                     <div className="search-dropdown-username">
                       @{user.username}
                     </div>
@@ -155,7 +174,13 @@ const FriendRequestsModal = ({
             onClick={() => onUserClick(req)}
           >
             <div id="request-card-wrapper">
-              <div id="request-card-picture"></div>
+              <div id="request-card-picture">
+                {req.profilePictureUrl ? (
+                  <img src={req.profilePictureUrl} />
+                ) : (
+                  <div id="request-card-picture-placeholder">?</div>
+                )}
+              </div>
               <div id="request-card-username">@{req.username}</div>
             </div>
 
@@ -187,7 +212,6 @@ const FriendRequestsModal = ({
 );
 
 // -- UserProfileModal ------------------------------------------------------------------------
-
 const UserProfileModal = ({
   user,
   isFriend,
@@ -206,7 +230,13 @@ const UserProfileModal = ({
         ✕
       </button>
 
-      <div id="profile-modal-picture"></div>
+      <div id="profile-modal-picture">
+        {user.profilePictureUrl ? (
+          <img src={user.profilePictureUrl} />
+        ) : (
+          <div id="profile-modal-picture-placeholder">?</div>
+        )}
+      </div>
 
       {/* <div id="profile-modal-name">{user.name}</div> */}
       <div id="profile-modal-username">@{user.username}</div>
@@ -236,7 +266,7 @@ const UserProfileModal = ({
                 onAccept(user.uid);
               }}
             >
-              <UserPlus /> Accept Request
+              <UserCheck /> Accept Request
             </button>
 
             <button
@@ -259,7 +289,11 @@ const UserProfileModal = ({
               }}
             >
               <UserPlus />
-              {requestSent ? "Request Sent" : isSendingRequest ? "Sending..." : "Add Friend"}
+              {requestSent
+                ? "Request Sent"
+                : isSendingRequest
+                  ? "Sending..."
+                  : "Add Friend"}
             </button>
           </div>
         )}

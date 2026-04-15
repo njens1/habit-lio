@@ -1,10 +1,18 @@
 /* Friends List CSS */
 
-#friend-picture {
+.friend-picture {
   background-color: #767676;
   width: 50px;
   height: 50px;
 
+  border-radius: 50%;
+}
+
+.friend-picture-placeholder {
+  background-color: #767676;
+  width: 50px;
+  height: 50px;
+  align-items: center;
   border-radius: 50%;
 }
 
@@ -130,6 +138,14 @@
   border-radius: 50%;
 }
 
+.search-dropdown-picture-placeholder {
+  background-color: #767676;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  border-radius: 50%;
+}
+
 .search-dropdown-name {
   font-weight: 600;
   font-size: 13px;
@@ -240,6 +256,14 @@
   background-color: #767676;
 }
 
+#request-card-picture-placeholder {
+  background-color: #767676;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  border-radius: 50%;
+}
+
 #request-card-name {
   font-weight: 600;
   font-size: 11px;
@@ -328,6 +352,30 @@
 }
 
 #profile-modal-picture {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #969696;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+#profile-modal-picture img,
+#request-card-picture img,
+.search-dropdown-picture img,
+.friend-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+#profile-modal-picture-placeholder {
   width: 72px;
   height: 72px;
   border-radius: 50%;

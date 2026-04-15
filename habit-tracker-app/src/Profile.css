@@ -319,3 +319,14 @@
 .profile-edit-buttons button:first-child:disabled {
   opacity: 0.5;
 }
+
+.react-calendar-heatmap {
+  .color-empty {
+    fill: #ebedf0;
+  }
+
+  .color-scale-1 { fill: #81bfe0; }
+  .color-scale-2 { fill: #4ea3d4; }
+  .color-scale-3 { fill: #144b81; }
+  .color-scale-4 { fill: #053061; }
+}

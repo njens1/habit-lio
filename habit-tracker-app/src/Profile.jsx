@@ -12,6 +12,7 @@ import {
   collection,
   getDocs,
   query,
+  getCountFromServer,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import {
@@ -29,6 +30,7 @@ import { Bar, Pie } from "react-chartjs-2";
 import CalendarHeatmap from "react-calendar-heatmap";
 import "react-calendar-heatmap/dist/styles.css";
 import "./Profile.css";
+import { listFriends } from "./firestore";
 
 ChartJS.register(
   CategoryScale,
@@ -69,6 +71,7 @@ function Profile({ uid, onClose }) {
   const [availableYears, setAvailableYears] = useState([
     new Date().getFullYear(),
   ]);
+  const [friendCount, setFriendCount] = useState(0);
   const [barData, setBarData] = useState({ labels: [], datasets: [] });
   const [pieData, setPieData] = useState({ labels: [], datasets: [] });
   const [highestStreak, setHighestStreak] = useState(0);
@@ -87,6 +90,11 @@ function Profile({ uid, onClose }) {
         setBio(data.bio || "");
         setIsPublic(data.isPublic || false);
         setEarnedCount((data.earnedBadges || []).length);
+        
+        const friendsRef = collection(db, "users", uid, "friends");
+        const friendSnapshot = await getCountFromServer(friendsRef);
+        setFriendCount(friendSnapshot.data().count);
+
         if (data.profilePictureUrl) {
           setAvatar(data.profilePictureUrl);
         } else if (user?.photoURL) {
@@ -366,6 +374,10 @@ function Profile({ uid, onClose }) {
               <div className="profile-stat">
                 <span className="profile-stat-num">🏅 {earnedCount}</span>
                 <span className="profile-stat-label">Badges</span>
+              </div>
+              <div className="profile-stat">
+                <span className="profile-stat-num">👥 {friendCount}</span>
+                <span className="profile-stat-label">Friends</span>
               </div>
             </div>
 

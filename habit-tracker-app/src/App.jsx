@@ -299,7 +299,7 @@ function App() {
 
                 {showMessagesPage && (
                   <div>
-                    <Messages />
+                    <Messages uid={user.uid} />
                   </div>
                 )}
 

@@ -17,6 +17,7 @@ import {
   where,
   limit,
   writeBatch,
+    onSnapshot,
 } from "firebase/firestore";
 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -834,4 +835,35 @@ export const saveProfilePicture = async (uid, file) => {
     console.error("Error uploading profile picture:", error);
     throw error;
   }
+};
+
+// Generates a unique ID for a chat room between two users
+export const getChatId = (uid1, uid2) => {
+  return [uid1, uid2].sort().join("_");
+};
+
+// Sets up a real time listener for a specific chat
+export const subscribeToMessages = (chatId, callback) => {
+  const q = query(
+      collection(db, "chats", chatId, "messages"),
+      orderBy("timestamp", "asc")
+  );
+  return onSnapshot(q, (snapshot) => {
+    const messages = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    callback(messages);
+  });
+};
+
+// Saves a new message to the database
+export const sendMessage = async (chatId, senderUid, text) => {
+  if (!text.trim()) return;
+  const messagesRef = collection(db, "chats", chatId, "messages");
+  await addDoc(messagesRef, {
+    senderUid,
+    text,
+    timestamp: serverTimestamp(),
+  });
 };

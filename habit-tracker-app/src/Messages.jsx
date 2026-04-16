@@ -4,11 +4,13 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Search, CircleEllipsis, SendHorizonal } from "lucide-react";
+import { listFriends, getChatId, subscribeToMessages, sendMessage } from "./firestore";
 import "./index.css";
 import "./Messages.css";
 
 
 //-- Fake data --------------------------
+/*
 const conversations = [
     {
         uid: 1, 
@@ -59,6 +61,7 @@ const conversations = [
     },
 ]
 //---------------------------------------
+*/
 
 const Avatar = ({ user }) => (
     <div className="avatar-wrapper">
@@ -72,23 +75,51 @@ const Avatar = ({ user }) => (
 );
 
 // selectedFriend for when you select a friend to message in friends page
-function Messages({ selectedFriend = conversations[0]}) {
-    const [selected, setSelected] = useState(selectedFriend);
+function Messages({ uid }) {
+    const [selected, setSelected] = useState(null);
     const [search, setSearch] = useState("");
     const [input, setInput] = useState("");
-    const [allConvos, setAllConvos] = useState(conversations);
+    const [friends, setFriends] = useState([]);
+    const [activeMessages, setActiveMessages] = useState([]);
     const [options, setOptions] = useState(false);
-
+    const messagesEndRef = useRef(null);
     const dropdownRef = useRef(null);
 
-    const filtered = allConvos.filter((c) => 
-        c.username.toLowerCase().includes(search.toLowerCase())
-    );
+    useEffect(() => {
+        const loadFriends = async () => {
+            if (!uid) return;
+            const data = await listFriends(uid);
+            setFriends(data);
+            if (data.length > 0 && !selected) setSelected(data[0]);
+        };
+        loadFriends();
+    }, [uid]);
 
-    // Send message backend here
-    const sendMessage = () => {
-        pass;
+    // Listen for live messages when a friend is selected
+    useEffect(() => {
+        if (!selected || !uid) return;
+        const chatId = getChatId(uid, selected.uid);
+        const unsubscribe = subscribeToMessages(chatId, (msgs) => {
+            setActiveMessages(msgs);
+        });
+        return () => unsubscribe();
+    }, [selected, uid]);
+
+    // Auto-scroll to bottom on new messages
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [activeMessages]);
+
+    const handleSend = async () => {
+        if (!input.trim() || !selected) return;
+        const chatId = getChatId(uid, selected.uid);
+        await sendMessage(chatId, uid, input);
+        setInput("");
     };
+
+    const filteredFriends = friends.filter(f =>
+        f.username.toLowerCase().includes(search.toLowerCase())
+    );
 
     // Handles clicking outside of the options popup modal
     useEffect(() => {
@@ -122,85 +153,62 @@ function Messages({ selectedFriend = conversations[0]}) {
                         />
                         <Search />
                     </div>
-                
+
 
                     <div id="convo-list">
-                        {filtered.map((c) => (
-                            <div 
-                                key={c.uid}
-                                className="convo-item"
-                                onClick={() => setSelected(c)}
-                            >
-                                <Avatar 
-                                    user={c}
-                                />
+                        {filteredFriends.map((f) => (
+                            <div key={f.uid} className={`convo-item ${selected?.uid === f.uid ? "selected" : ""}`}
+                                 onClick={() => setSelected(f)}>
+                                <Avatar user={f} />
                                 <div className="convo-info">
-                                    <div className="convo-name">@{c.username}</div>
-                                    <div className="convo-preview">
-                                        {allConvos.find((x) => x.uid === c.uid)?.preview}
-                                    </div>
+                                    <div className="convo-name">@{f.username}</div>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Chat Area */}
                 <div id="chat-area">
-                    <div id="chat-header">
-                        <Avatar user={selected} />
-                        <div id="chat-header-info">
-                            <div id="chat-header-name">@{selected.username}</div>
-                            <div id="chat-header-status" className={ selected?.active ? "active" : "inactive" }>{ selected?.active ? "Active now" : "Inactive" }</div>
-                        </div>
-                        <div ref={dropdownRef} style={{position: "relative"}}>
-                            <button id="chat-header-options" onClick={() => setOptions(!options)}><CircleEllipsis size={24} /></button>
-                            {options && (
-                                <div id="options-dropdown">
-                                    <button className="options-item" onClick={() => {
-                                        // remove friend logic here
-                                        setOptions(false);
-                                    }}>
-                                        Remove Friend
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Messages */}
-                <div id="messages-area">
-                    {selected?.messages.map((msg) => {
-                        const isMe = msg.sender.toLowerCase() === "me";
-                        return (
-                            <div key={msg.id} className={`message-row${isMe ? " sent" : " received"}`}>
-                                {!isMe && <Avatar user={selected} />}
-                                <div className={`message-bubble${isMe ? " sent" : " received"}`}>
-                                    {msg.text}
+                    {selected ? (
+                        <>
+                            <div id="chat-header">
+                                <Avatar user={selected} />
+                                <div id="chat-header-info">
+                                    <div id="chat-header-name">@{selected.username}</div>
                                 </div>
                             </div>
-                        );
-                    })}
-                </div>
-
-                {/* Message Input */}
-                <div id="messages-input-bar">
-                    <input
-                        id="messages-input"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && sendMessage()} 
-                        placeholder="Type a message"
-                    />
-                    <button id="messages-input-btn" onClick={sendMessage}>
-                        <SendHorizonal size={18} />
-                    </button>
+                            <div id="messages-area">
+                                {activeMessages.map((msg) => {
+                                    const isMe = msg.senderUid === uid;
+                                    return (
+                                        <div key={msg.id} className={`message-row ${isMe ? "sent" : "received"}`}>
+                                            <div className={`message-bubble ${isMe ? "sent" : "received"}`}>
+                                                {msg.text}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                                <div ref={messagesEndRef} />
+                            </div>
+                            <div id="messages-input-bar">
+                                <input id="messages-input" value={input}
+                                       onChange={(e) => setInput(e.target.value)}
+                                       onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                                       placeholder="Type a message" />
+                                <button id="messages-input-btn" onClick={handleSend}>
+                                    <SendHorizonal size={18} />
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'black'}}>
+                            Select a friend to start chatting
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
     );
 }
-
 
 export default Messages;

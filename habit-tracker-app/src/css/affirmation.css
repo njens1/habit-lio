@@ -91,3 +91,12 @@
     width: 90%;
     /* flex-shrink: 1; */
 }
+
+#affirmation-selector-container{
+    position: relative;
+    /* display: inline-block; */
+
+    background-color: whitesmoke;
+    width: 20%;
+    height: 10%;
+}

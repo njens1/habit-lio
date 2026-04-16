@@ -1,19 +1,22 @@
 
 import "../css/Affirmation.css";
+import "../css/Dropdown.css";
 import { useState } from "react";
 import { useEffect } from "react";
 import { saveAffirmations } from "../second-firestore";
 import{Lightbulb} from "lucide-react";
 import { generateAffirmations } from "../gemini";
-// import AffirmationEditing from "./AffirmationEditing";
+import DefaultAffirmations from "./DefaultAffirmations";
 
 function AffirmationInput({index, affirmation, setAffirmations}){
 
     const [disabled, setDisabled] = useState(false);
     const [affirmationText, setAffirmationText] = useState(affirmation);
+    const [showSelector, setShowSelector] = useState(false);
 
     const generateAffirmation = async () => {
         setDisabled(true);
+        setAffirmationText("Generating...");
         const response = await generateAffirmations();
         console.log("Generated Affirmation: ", response);
         setAffirmationText(response);
@@ -24,6 +27,15 @@ function AffirmationInput({index, affirmation, setAffirmations}){
             return newAffirmations;
         });
         setDisabled(false);
+    }
+
+    const setAffirmationFromSelector = (selectedAffirmation) => {
+        setAffirmationText(selectedAffirmation);
+                setAffirmations((prevAffirmations) => {
+            const newAffirmations = [...prevAffirmations];
+            newAffirmations[index] = selectedAffirmation;
+            return newAffirmations;
+        });
     }
 
     useEffect(() => {
@@ -49,12 +61,35 @@ function AffirmationInput({index, affirmation, setAffirmations}){
                             return newAffirmations;
                         }
                         )}}/>
-                        <button id="generate-affirmation-btn" title="Generate Affirmation" 
-                        disabled={disabled}
-                        onClick={() => {
-                            // Logic for generating affirmation
-                            generateAffirmation();
-                        }}><Lightbulb /></button>
+                    < DefaultAffirmations hidden={!showSelector} 
+                    setAffirmations={setAffirmations}
+                    setShowSelector={setShowSelector}
+                    setAffirmationFromSelector={setAffirmationFromSelector}/>
+                    <div className="dropdown">
+                        {/* <AffirmationSelector hidden={showSelector} 
+                        affirmations={affirmationText} 
+                        setAffirmations={setAffirmationText}/> */}
+
+                        <button id="generate-affirmation-btn" 
+                        className="dropbtn"
+                        title="Generate Affirmation" 
+                        disabled={disabled}>
+                            <Lightbulb />
+                            </button>
+                        <div className="dropdown-content">
+                            <a href="#"
+                             onClick={() => setShowSelector(!showSelector)}>
+                                Select an Affirmation🧑‍💻
+                                </a>
+                            <a href="#" onClick={
+                                () => {
+                                    generateAffirmation();
+                                }
+                            }>
+                                Generate an Affirmation💭
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
                 <br />

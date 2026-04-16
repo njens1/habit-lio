@@ -236,6 +236,20 @@ function App() {
     setNewHabitTitle("");
   };
 
+  // Prevents affirmations generated and selected from being shown if they weren't saved.
+  const getAffirmations = async () => {
+    if (!user) return;
+    try {
+      const getAffirmations = await getUserInfo(user.uid, "affirmations");
+      setAffirmations(getAffirmations);
+      console.log("Affirmations: ", getAffirmations);
+    }
+    catch (error) {
+      console.error("Error loading affirmations:", error);
+    }
+  };
+
+
   const [showPopup, setShowPopup] = useState(false);
   //  const [uid, setUid] = useState("USER_ID_FROM_FIREBASE"); // This is your existing UID
 
@@ -288,7 +302,8 @@ function App() {
                     alignItems: "center",
                   }}
                 >
-                  <Affirmation user={user} affirmations={affirmations} />
+                  <Affirmation user={user} 
+                  affirmations={affirmations} getAffirmations={getAffirmations} />
                 </div>
 
                 {showFriendsPage && (

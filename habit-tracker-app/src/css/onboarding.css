@@ -190,7 +190,14 @@ label {
     align-items: center;
     justify-content: space-between;
     /* border: 5px solid red; */
-    width: 85%;
+    width: 80%;
+
+}
+
+.affirmation-input-inner-onboarding input{
+    width: 80%;
+    height: 80%;
+
 }
 
 #affirmations-container {

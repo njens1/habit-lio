@@ -74,30 +74,24 @@ function Badges({ uid, habits, onClose }) {
         </button>
 
         <div className="badges-header">
-          <h2 className="badges-title">🏅 Your Badges</h2>
+          <h1 className="badges-title">🏅 Your Badges</h1>
           <div className="badges-summary">
-            <div className="badges-summary-pill">
-              <div className="pill-num">Total Badges Earned: {earnedCount}</div>
+            <div className="badges-stat">
+              Total Badges Earned: <span>{earnedCount}</span>
             </div>
 
-            <br />
-
-            <div className="badges-summary-pill">
-              <div className="pill-num">
-                Badges Yet to Complete: {totalCount - earnedCount}
-              </div>
+            <div className="badges-stat">
+              Badges Yet to Earn: <span>{totalCount - earnedCount}</span>
             </div>
 
-            <br />
-
-            <div className="badges-summary-pill">
-              <div className="pill-num">
-                Badges Completed:{" "}
+            <div className="badges-stat">
+              Badges Completion:{" "}
+              <span>
                 {totalCount > 0
                   ? Math.round((earnedCount / totalCount) * 100)
                   : 0}
                 %
-              </div>
+              </span>
             </div>
           </div>
         </div>
@@ -142,7 +136,7 @@ function Badges({ uid, habits, onClose }) {
               <div className="badges-divider" />
 
               <div className="badges-section-title locked-title">
-                Badges Yet to be Earned
+                Unearned Badges
               </div>
               {CATEGORIES.map(({ key, label }) => {
                 const locked = BADGES.filter(

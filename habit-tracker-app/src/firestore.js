@@ -17,7 +17,7 @@ import {
   where,
   limit,
   writeBatch,
-    onSnapshot,
+  onSnapshot,
 } from "firebase/firestore";
 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -338,11 +338,16 @@ export const listFriends = async (uid) => {
 
   return friendDocs
     .filter((d) => d.exists())
-    .map((d) => ({
-      uid: d.id,
-      username: d.data().username || d.data().userInfo?.username || "",
-      profilePictureUrl: d.data().profilePictureUrl || "",
-    }));
+    .map((d) => {
+      const data = d.data();
+
+      return {
+        uid: d.id,
+        username: data.username || data.userInfo?.username || "",
+        profilePictureUrl: data.profilePictureUrl || "",
+        bio: data.bio || "", // ✅ ADD THIS
+      };
+    });
 };
 
 export const removeFriend = async (friendUid, uid) => {
@@ -395,9 +400,11 @@ export const createUserProfile = async (
   { email, displayName, bio, isPublic, avatar, earnedBadges },
 ) => {
   const userRef = doc(db, "users", uid);
-  await setDoc(
-    userRef,
-    {
+  const userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) {
+    // First time creation only. Set all defaults
+    await setDoc(userRef, {
       email: email || null,
       displayName: displayName || null,
       bio: bio || "",
@@ -405,9 +412,14 @@ export const createUserProfile = async (
       avatar: avatar || null,
       earnedBadges: earnedBadges || [],
       createdAt: serverTimestamp(),
-    },
-    { merge: true },
-  );
+    });
+  } else {
+    // Doc exists already. Only update non-sensitive fields that may have changed
+    await updateDoc(userRef, {
+      email: email || null,
+      displayName: displayName || null,
+    });
+  }
 
   return userRef;
 };
@@ -845,13 +857,13 @@ export const getChatId = (uid1, uid2) => {
 // Sets up a real time listener for a specific chat
 export const subscribeToMessages = (chatId, callback) => {
   const q = query(
-      collection(db, "chats", chatId, "messages"),
-      orderBy("timestamp", "asc")
+    collection(db, "chats", chatId, "messages"),
+    orderBy("timestamp", "asc"),
   );
   return onSnapshot(q, (snapshot) => {
-    const messages = snapshot.docs.map(doc => ({
+    const messages = snapshot.docs.map((doc) => ({
       id: doc.id,
-      ...doc.data()
+      ...doc.data(),
     }));
     callback(messages);
   });

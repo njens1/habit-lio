@@ -83,8 +83,8 @@ const Avatar = ({ user }) => (
 );
 
 // selectedFriend for when you select a friend to message in friends page
-function Messages({ uid }) {
-    const [selected, setSelected] = useState(null);
+function Messages({ uid, selectedFriend = null }) {
+    const [selected, setSelected] = useState(selectedFriend);
     const [search, setSearch] = useState("");
     const [input, setInput] = useState("");
     const [friends, setFriends] = useState([]);

@@ -373,7 +373,7 @@ const UserProfileModal = ({
             <UserX size={14} /> Remove
           </button>
           <button className="profile-btn profile-btn-message" 
-            onClick={() => { setFriendMessage={user}; setShowFriendsPage(false); setShowMessagesPage(true); }}
+            onClick={() => { setFriendMessage(user); setShowFriendsPage(false); setShowMessagesPage(true); }}
           >
             <MessageCircle size={14} /> Message
           </button>

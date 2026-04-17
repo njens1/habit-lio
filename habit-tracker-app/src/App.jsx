@@ -319,7 +319,7 @@ function App() {
 
                 {showMessagesPage && (
                   <div>
-                    <Messages uid={user.uid} />
+                    <Messages uid={user.uid} selectedFriend={friendMessage} />
                   </div>
                 )}
 

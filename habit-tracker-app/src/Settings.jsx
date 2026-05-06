@@ -112,6 +112,17 @@ function SettingsPopup({ closePopup }) {
     try {
       if (!user) throw new Error("No user signed in");
 
+      // 1. Check if the session is fresh (e.g., less than 5 minutes old)
+      const lastSignIn = new Date(user.metadata.lastSignInTime).getTime();
+      const now = new Date().getTime();
+      const fiveMinutes = 5 * 60 * 1000;
+
+      if (now - lastSignIn > fiveMinutes) {
+        // Session is likely too old for sensitive operations
+        alert("For security, you must login again before deleting your account.");
+        return; 
+      }
+
       // Force token refresh
       await user.getIdToken(true);
 

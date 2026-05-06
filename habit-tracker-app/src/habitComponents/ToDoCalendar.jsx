@@ -11,7 +11,7 @@ function HabitOnDay(props) {
   useEffect(() => {
 
     const now = new Date().setHours(0, 0, 0, 0);
-    let habitsOnDay = [];
+    let habits = [];
 
     if(props.date === null) {
       setHabitsOnDay([]);
@@ -22,7 +22,7 @@ function HabitOnDay(props) {
     if(props.date < now) {
       // Filter habits to find those that have a start and end date 
       // that includes the given date
-      habitsOnDay = props.habits.filter(habit => {
+      habits = props.habits.filter(habit => {
         const startDate = new Date(habit.startDate);
         const endDate = habit.endDate ? new Date(habit.endDate) : null;
         return startDate <= props.date && (!endDate || endDate >= props.date);
@@ -33,16 +33,16 @@ function HabitOnDay(props) {
     else{
       // Filter habits to find those that have a start and end date 
       // that includes the given date
-      habitsOnDay = props.habits.filter(habit => {
+      habits = props.habits.filter(habit => {
         const startDate = new Date(habit.startDate);
         const endDate = habit.endDate ? new Date(habit.endDate) : null;
         return startDate <= props.date && (!endDate || endDate >= props.date);
       });
       // Filter out habits that are not active on the given date
-      const habitsUncompleted = habitsOnDay.filter(habit => {
+      const habitsUncompleted = habits.filter(habit => {
         return habit.isActive;
-    });
-      habitsOnDay = habitsUncompleted;
+      });
+      habits = habitsUncompleted;
     }
 
 
@@ -59,7 +59,7 @@ function HabitOnDay(props) {
     //   return !streaks.includes(dateString);
     // });
 
-    setHabitsOnDay(habitsOnDay);
+    setHabitsOnDay(habits);
   }, [props.date, props.habits]);
   return(
     <div className="habits-on-day-container" hidden={!props.visible}>
@@ -74,16 +74,10 @@ function HabitOnDay(props) {
         ✕
         </button>
         <div className="habits-on-day-inner">
-          {(props.date < new Date().setHours(0, 0, 0, 0)) && (
-            <h3 
-            style={{color: "black", fontSize: "32px"}}>
-              Habits that were to be done on {props.date ? props.date.toLocaleDateString() : "No date selected"}</h3>
-          )}
-           {(props.date >= new Date().setHours(0, 0, 0, 0)) && (
           <h3 
-          style={{color: "black", fontSize: "32px"}}>
-            Habits to be done on {props.date ? props.date.toLocaleDateString() : "No date selected"}</h3>
-          )}
+          style={{color: "white", fontSize: "32px"}}>
+            Habits to be done on {props.date ? 
+            props.date.toLocaleDateString() : "No date selected"}</h3>
           {habitsOnDay.length > 0 ? (
             <div id="habits-on-day-list">
               {habitsOnDay.map(habit => (

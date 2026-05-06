@@ -16,6 +16,7 @@ import {
   addDoc,
   where,
   limit,
+  arrayUnion
 } from "firebase/firestore";
 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -39,15 +40,38 @@ export const saveAffirmations = async (userId, affirmationsArray) => {
   }
 };
 
+const getTodayDate = () => {
+  const today = new Date();
+  return today.toISOString().split("T")[0];
+};
+
 export const completeHabit = async (userId, habitId, setActive) => {
   const habitDocRef = doc(db, "users", userId, "habits", habitId);
-  try {
-    await updateDoc(habitDocRef, {
-      isActive: setActive,
-      completedAt: serverTimestamp(),
-    });
-    console.log("Habit marked as completed!");
+  // const habitData = habitDocRef.data();
+  const today = getTodayDate();
+  const completions = habitDocRef.completions || [];
+
+  // let updatedCompletions;
+
+ try {
+    // 1. If we are marking it as inactive (completed), add today to the list
+    if (setActive === false) {
+      await updateDoc(habitDocRef, {
+        isActive: false,
+        completions: arrayUnion(today), // Atomically adds 'today' to the array
+        completedAt: serverTimestamp(),
+      });
+    } else {
+      // 2. If marking active again, reset completions (as per your logic)
+      await updateDoc(habitDocRef, {
+        isActive: true,
+        completions: [],
+        completedAt: null, // Optional: clear completion timestamp
+      });
+    }
+    
+    console.log("Habit status updated!");
   } catch (error) {
-    console.error("Error marking habit as completed:", error);
+    console.error("Error updating habit:", error);
   }
 };

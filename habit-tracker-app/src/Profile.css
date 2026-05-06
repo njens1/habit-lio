@@ -25,6 +25,57 @@
   overflow-y: auto;
 }
 
+@media (prefers-color-scheme: dark) {
+  .profile-popup {
+    background: #152331;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #1b1b1b, #152331);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #1b1b1b, #152331); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+  .profile-stat-num, .profile-stat-label{ 
+    color: #ffffff !important; 
+  }
+
+  .profile-section-header h3, .profile-section h3 {
+    color: #eee !important;
+  }
+
+
+  .profile-name{
+    color: #eee !important;
+  }
+
+  .profile-edit-btn {
+    border-color: #555;
+    color: #eee;
+    &:hover {
+      color: black;
+    }
+  }
+
+  .profile-section-header{
+    color: #eee !important;
+  }
+  
+  #data-table{
+    background-color: white !important;
+  }
+
+  .profile-edit-screen h3{
+    color: #eee !important;
+  }
+
+  .profile-toggle-row span{
+    color: #eee !important;
+  }
+
+}
+
+
+
+#data-table {
+  background-color: transparent;
+}
+
 .profile-close-btn {
   position: absolute;
   top: 12px;

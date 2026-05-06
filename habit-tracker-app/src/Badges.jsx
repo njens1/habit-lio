@@ -72,7 +72,7 @@ function Badges({ uid, habits, onClose }) {
             {selectedCategory ? (
                 <div className="badge-back-button" onClick={() => setSelectedCategory(null)}>
                   <ChevronLeft size={28} />
-                  <span>Back to Categories</span>
+                  <span id="back-to-categories">Back to Categories</span>
                 </div>
             ) : <div />}
             <button className="badges-close-btn" onClick={onClose}>✕</button>

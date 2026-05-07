@@ -194,6 +194,17 @@
   z-index: 20;
 }
 
+@media (prefers-color-scheme: dark) {
+  #requests-modal {
+    background: #152331 !important;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #1b1b1b, #152331) !important;  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #1b1b1b, #152331) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+  #requests-modal-title{
+    color:white !important;
+  }
+}
+
 #requests-modal {
   background: #f0f0f0;
   border-radius: 20px;

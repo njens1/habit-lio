@@ -13,6 +13,10 @@
     #edit-affirmations {
         color: rgba(0, 0, 0, 1) !important;
     }
+
+    .affirmation-number{
+        color: black !important;
+    }
 }
 
 @media (prefers-color-scheme: dark){
@@ -35,9 +39,9 @@
         color: white !important;
     }
 
-     label {
+     /* label {
          color: white;
-     }
+     } */
      /* .default-affirmation-item {
         background-color: #3b5998;
         color: white;
@@ -56,6 +60,10 @@
         background-color: #ffffff !important;
         /* box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); */
      }
+
+    .affirmation-number{
+        color: white !important;
+    }
 }
 
 .generate-affirmation-btn{

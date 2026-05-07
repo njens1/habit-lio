@@ -53,7 +53,8 @@ function Habit({habit, uid, loadHabits, completeHabitEarly, onEdit}){
   
   return(
     <div>
-      <div className ="habit-created" style={{backgroundColor: habit.color ?? "#FFFFFF"}}>
+      <div className ="habit-created" style={{background: "linear-gradient(285deg, white, 1%, " + (habit.color ?? "#FFFFFF") + ")"}}>
+      {/* <div className ="habit-created" style={{backgroundColor: habit.color ?? "#FFFFFF"}}> */}
         <input 
           type="checkbox" 
           className="habit-checkbox"

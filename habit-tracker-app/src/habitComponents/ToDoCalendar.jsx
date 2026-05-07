@@ -45,20 +45,6 @@ function HabitOnDay(props) {
       habits = habitsUncompleted;
     }
 
-
-    // Filter out habits that were completed on the given date using streaks info
-    // const habitsStreakChecked = habitsUncompleted.filter(habit => {
-    //   const streaks = habit.completions || [];
-    //   const streakFound
-    //   streaks.map(streak => {
-    //     const date = new Date(streak);
-    //     const dateString = date.toISOString().split("T")[0];
-    //     return dateString;
-    //   }
-    //   const dateString = props.date.toISOString().split("T")[0];
-    //   return !streaks.includes(dateString);
-    // });
-
     setHabitsOnDay(habits);
   }, [props.date, props.habits]);
   return(
@@ -74,8 +60,7 @@ function HabitOnDay(props) {
         ✕
         </button>
         <div className="habits-on-day-inner">
-          <h3 
-          style={{color: "white", fontSize: "32px"}}>
+          <h3 id="habits-on-day-title">
             Habits to be done on {props.date ? 
             props.date.toLocaleDateString() : "No date selected"}</h3>
           {habitsOnDay.length > 0 ? (
@@ -114,7 +99,7 @@ function ToDoCalendar(props) {
   }
   return (
     <div className="todo-calendar">
-      <h2 style={{color: "white"}}>To-Do Calendar</h2>
+      <h2>To-Do Calendar</h2>
       {/* Calendar component goes here */}
         <div className="todo-calendar-container">
           <DayPicker

@@ -20,6 +20,26 @@
 
 }
 
+@media (prefers-color-scheme: light){
+  #root {
+    background: #bfdcef !important;
+  }
+
+  #greeting-home {
+    color: black !important;
+  }
+
+  #habits-title {
+    color: black !important;
+  }
+  
+}
+
+#habits-title{
+  font-size: 28px;
+  color: white;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

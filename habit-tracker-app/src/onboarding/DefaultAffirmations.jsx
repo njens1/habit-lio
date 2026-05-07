@@ -66,7 +66,7 @@ function DefaultAffirmations({hidden,setAffirmations,
                                                 setShowSelector(false);
                                                 setAffirmationFromSelector(affirmation);
                                             }}>
-                                                <Plus size={16} />
+                                                <Plus size={18} />
                                             </button>
                                         </div>
                                     </div>

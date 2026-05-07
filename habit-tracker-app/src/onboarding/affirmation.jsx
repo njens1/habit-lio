@@ -15,7 +15,7 @@ function Affirmation({ user, affirmations, getAffirmations, setShowAffirmationEd
   
   return (
     <div id="today-affirmation-container">
-        <h2>Today's Affirmation:</h2>
+        <h2>Today's Affirmation</h2>
         {affirmationsList.length === 0 ? (
             <p>No affirmations found. Please create some affirmations to see them here!</p>
         ) : (

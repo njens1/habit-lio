@@ -1,3 +1,8 @@
+@media (prefers-color-scheme: dark) {
+    #page-title {
+        color: #ffffff !important;
+    }
+}
 /* ── Title ── */
 #page-title {
     font-weight: 800;

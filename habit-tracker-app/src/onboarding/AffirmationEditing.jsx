@@ -48,7 +48,8 @@ function AffirmationInput({index, affirmation, setAffirmations, remove}){
             <p>(100 Characters or Less)</p>
             <div className="affirmation-input-container">
                 <div className="affirmation-input-inner">
-                    <button onClick={() => remove(index)}><Minus color="#ff0000" /></button>
+                    <button className="affirmation-input-remove-btn" title="Remove Affirmation"
+                    onClick={() => remove(index)}><Minus color="#ff0000" /></button>
                     <div className="affirmation-input-creation">
                         <input type="text" id={`affirmation-${index}`} 
                         name={`affirmation-${index}`} 
@@ -73,8 +74,8 @@ function AffirmationInput({index, affirmation, setAffirmations, remove}){
                             affirmations={affirmationText} 
                             setAffirmations={setAffirmationText}/> */}
 
-                            <button id="generate-affirmation-btn" 
-                            className="dropbtn"
+                            <button
+                            className="dropbtn generate-affirmation-btn"
                             title="Generate Affirmation" 
                             disabled={disabled}>
                                 <Lightbulb />
@@ -150,7 +151,8 @@ function AffirmationEditing(props){
                     <div id="affirmation-editing-content">
                         <div id="affirmation-editing-content-inner">
                             <h1>Your Affirmations</h1>
-                            <p>Affirmations are positive statements that you tell or write to yourself
+                            <p style={{fontSize: "18px"}}>
+                                Affirmations are positive statements that you tell or write to yourself
                                 for self-motivation. Studies have found that affirmations boost well-being. 
                             </p>
                             <div id="affirmations-container">

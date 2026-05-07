@@ -1,3 +1,71 @@
+@media (prefers-color-scheme: light){
+    #today-affirmation-container {
+        background-color: rgba(255, 255, 255, 1) !important;
+        color: black !important;
+        box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    #today-affirmation-container h2,
+    #today-affirmation-container p {
+        color: black !important;
+    }
+    
+    #edit-affirmations {
+        color: rgba(0, 0, 0, 1) !important;
+    }
+}
+
+@media (prefers-color-scheme: dark){
+    #affirmation-editing-popup {
+        background: #152331;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #1b1b1b, #152331);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #1b1b1b, #152331); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        color: white;
+     }
+     .default-affirmation-list {
+        background:transparent !important; 
+     }
+
+     #affirmation-editing-popup h2,
+     #affirmation-editing-popup p {
+        color: white;
+     }
+
+    #affirmation-editing-content-inner h1{
+        color: white !important;
+    }
+
+     label {
+         color: white;
+     }
+     /* .default-affirmation-item {
+        background-color: #3b5998;
+        color: white;
+    } */
+    .default-affirmation-btn {
+        background-color: #ffffff;
+        /* box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); */
+     }
+     .affirmation-input-remove-btn{
+        background-color: white;
+        border: none;
+        outline: none;
+     }
+
+     .generate-affirmation-btn{
+        background-color: #ffffff !important;
+        /* box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); */
+     }
+}
+
+.generate-affirmation-btn{
+    background-color: grey;
+    &:hover{
+        background-color: #555 !important;
+        transform: scale(1.05);
+    }
+}
+
 #today-affirmation-container{
     display: flex;
     flex-direction: column;

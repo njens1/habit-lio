@@ -1,3 +1,9 @@
+@media (prefers-color-scheme: light){
+    #habit-filters label {
+        color: black !important;
+    }
+}
+
 #habit-filters{
     display: flex;
     flex-direction: row;

@@ -888,7 +888,7 @@ function HabitCreate({ addHabit }) {
                     depending on whether custom was selected or button was clicked */}
           {category !== "Custom" ? (
             <div>
-              <h2 id="habit-title" style={{ fontSize: "36px", color: "white" }}>
+              <h2 id="habit-title">
                 Select a Habit to Track
               </h2>
               <div id="habit-layout">

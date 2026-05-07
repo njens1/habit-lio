@@ -579,7 +579,7 @@ function CreateHabitForm(props) {
           </div>
         </div>
         <br />
-        <hr style={{ color: "#000000", width: "100%" }} />
+        {/* <hr style={{ color: "#000000", width: "100%" }} /> */}
         {/* Habit Type */}
         <div id="habit-form-second-row">
           <h2 style={{ fontSize: "24px", textAlign: "center" }}>Habit Type</h2>
@@ -603,7 +603,7 @@ function CreateHabitForm(props) {
           </div>
         </div>
         {/* Goal Info */}
-        <hr style={{ color: "#000000", width: "100%" }} />
+        {/* <hr style={{ color: "#000000", width: "100%" }} /> */}
         <div id="habit-form-third-row">
           <h2 style={{ fontSize: "24px", textAlign: "center" }}>Goal Info</h2>
           <div id="goal-period">
@@ -641,6 +641,7 @@ function CreateHabitForm(props) {
                 name="value"
                 min="1"
                 max="10000"
+                defaultValue={1}
                 onInput={(e) => {
                         const value = parseInt(e.target.value) || 1;
                         if (value > 10000) e.target.value = 10000;
@@ -705,7 +706,7 @@ function CreateHabitForm(props) {
             setNumOfDays={setNumOfDays}
           />
         </div>
-        <hr style={{ color: "#000000", width: "100%" }} />
+        {/* <hr style={{ color: "#000000", width: "100%" }} /> */}
         {/* Reminder Settings */}
         <div id="habit-form-fourth-row">
           <h2 style={{ fontSize: "24px", textAlign: "center" }}>
@@ -729,6 +730,7 @@ function CreateHabitForm(props) {
                 setReminder(e.target.checked);
               }}
             ></input>
+            <br />
             <br />
             <div id="yes-reminder" hidden={true}>
               <label
@@ -755,7 +757,7 @@ function CreateHabitForm(props) {
             </div>
           </div>
         </div>
-        <hr style={{ color: "#000000", width: "100%" }} />
+        {/* <hr style={{ color: "#000000", width: "100%" }} /> */}
         <div id="submit-button-container">
           <h2 style={{ fontSize: "24px", textAlign: "center" }}>Priority & Term</h2>
           <div id="priority-setting">
@@ -796,6 +798,11 @@ function CreateHabitForm(props) {
                 type="date"
                 id="end-date-create"
                 name="end-date-create"
+                defaultValue={(() => {
+                  const d = new Date();
+                  d.setDate(d.getDate() + 7);
+                  return d.toLocaleDateString('en-CA'); // en-CA gives the required YYYY-MM-DD format
+                })()}
                 style={{ fontSize: "18px", textAlign: "center" }}
               ></input>
             </div>
@@ -881,7 +888,7 @@ function HabitCreate({ addHabit }) {
                     depending on whether custom was selected or button was clicked */}
           {category !== "Custom" ? (
             <div>
-              <h2 id="habit-title" style={{ fontSize: "36px", color: "white" }}>
+              <h2 id="habit-title">
                 Select a Habit to Track
               </h2>
               <div id="habit-layout">

@@ -1,3 +1,27 @@
+@media (prefers-color-scheme: dark) {
+    .default-affirmation-popup {
+       background: #152331;  /* fallback for old browsers */
+       background: -webkit-linear-gradient(to right, #000000, #152331);  /* Chrome 10-25, Safari 5.1-6 */
+       background: linear-gradient(to right, #000000, #152331); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+       color: white;
+    }
+    .default-affirmation-list {
+        background:transparent !important; 
+    }
+
+    .default-affirmation-popup h2,
+    .default-affirmation-popup p {
+        color: white;
+    }
+    /* .default-affirmation-item {
+        background-color: #3b5998;
+        color: white;
+    } */
+    .default-affirmation-btn {
+        background-color: #ffffff;
+        /* box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); */
+    }
+}
 .default-affirmation-container{
     background-color: rgba(0,0,0,0);
     position: fixed;
@@ -16,9 +40,19 @@
     background-color: #e8f6ff;
     color: black; 
     width: 35rem;
-    height: 35rem;
+    height: 36rem;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.default-affirmation-popup h2{
+    font-size: 1.5rem;
+
+}
+.default-affirmation-popup p{
+    font-size: 1.2rem;
+    text-align: center;
+    /* max-width: 400px; */
 }
 
 .default-affirmation-list-container{
@@ -33,12 +67,23 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    background-color: #ffff;
+    background-color: transparent;
     width: 90%;
     padding: 1em;
     max-height: 35em;
     overflow-y: auto;
     gap: 1em;
+}
+
+.default-affirmation-item-inner{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 95%;
+    height: 5em;
+    /* border: 2px solid black; */
+    /* gap: 1em; */
 }
 
 .default-affirmation-item{
@@ -50,12 +95,12 @@
     border-radius: 36px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 24px;
-    background-color: rgb(241, 236, 236);
+    background-color: rgb(255, 255, 255);
 }
 
 .default-affirmation-text{
     text-wrap: pretty;
-    width: 90%;
+    width: 75%;
 }
 
 .default-affirmation-btn{
@@ -64,9 +109,9 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    height: 50px;
-    width: 50px;
-    background-color: #d9d9d9;
+    height: 60%;
+    width: 50%;
+    background-color: #ffffff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -106,15 +151,6 @@
     }
 }
 
-.default-affirmation-item-inner{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 90%;
-    /* border: 2px solid black; */
-    /* gap: 1em; */
-}
 
 #default-affirmation-list-container-onboarding{
     display: flex;

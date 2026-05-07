@@ -13,6 +13,42 @@ input{
   z-index: 9999;
 }
 
+@media (prefers-color-scheme: light) {
+  #popup {
+    background: #f1f9fe !important;
+  }
+
+  #habit-title{
+    color: black !important;
+  }
+
+  #close-button {
+    color: black !important;
+    &:hover {
+      color: #555 !important;
+    }
+  }
+
+  #habit-window {
+    background-color: #ffffff !important;
+    /* outline: gray solid 0.1px !important; */
+  }
+
+  #habitCategory{
+    color: #000000 !important;
+  }
+
+  #category-description {
+    color: black !important;
+  }
+  
+}
+
+#habit-title{
+    font-size: 36px;
+    color: white;
+  }
+
 #popup {
   position: fixed;
   top: 50%;
@@ -125,7 +161,7 @@ input{
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  max-height: 35em;
+  max-height: 36em;
   /* height: 50em;
     width: 50em; */
 }
@@ -402,6 +438,7 @@ input{
   background-color: #fffefe;
   box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.5);
   border-radius: 10px;
+  /* margin-bottom: 25px; */
   width: 100%;
   margin: 10px;
 }

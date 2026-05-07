@@ -184,6 +184,9 @@ function Profile({ uid, onClose }) {
     const counts = months.map(
       (_, i) =>
         habitsData.filter((habit) => {
+          // If the habit isn't active, skip it immediately
+          if (habit.isActive === false) return false;
+
           const start =
             habit.startDate?.toDate?.() ||
             (habit.startDate ? new Date(habit.startDate) : null);
@@ -396,7 +399,7 @@ function Profile({ uid, onClose }) {
                     ))}
                   </select>
                 </div>
-                <div style={{ height: "180px" }}>
+                <div id="data-table" style={{ height: "180px" }}>
                   <Bar
                     data={barData}
                     options={{

@@ -1,3 +1,27 @@
+@media (prefers-color-scheme: dark) {
+    .settings-popup {
+        background: #152331 !important;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #000000, #152331) !important;  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #000000, #152331) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        color: #fff !important;
+    }
+    .toggle-password-btn {
+        background: #555 !important;
+        color: #fff !important;
+    }
+    .settings-close-btn {
+        color: #aaa !important;
+    }
+
+    .settings-popup h2{
+        color: #fff !important;
+    }
+
+    .password-change-screen h3{
+        color: #fff !important;
+    }
+}
+
 .settings-popup-overlay {
   position: fixed;
   top: 0;
@@ -20,6 +44,7 @@
   text-align: center;
   position: relative;
 }
+
 
 .settings-popup > button:not(.settings-close-btn) {
   margin-top: 10px;

@@ -411,7 +411,8 @@ function App() {
                   title={!showAffirmation ? "Show Affirmation View" : "Nothing to show"}
                   disabled={showAffirmation} 
                   onClick={() => setShowAffirmation(true)}>
-                    <CircleChevronLeft size={64} color={showAffirmation ? "lightgray" : "white"} />
+                    <CircleChevronLeft 
+                    size={64} color={showAffirmation ? "lightgray" : "white"} />
                   </button>
 
                   <div 
@@ -531,7 +532,7 @@ function App() {
                 )}
                 <div hidden={showFriendsPage || showMessagesPage}>
                   {/* // Display habits */}
-                  <h2 style={{ fontSize: "28px", color: "white" }}>
+                  <h2 id="habits-title">
                     Your Habits
                   </h2>
                   {/* Habit Filter */}

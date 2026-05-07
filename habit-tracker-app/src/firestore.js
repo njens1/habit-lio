@@ -441,6 +441,10 @@ export const createHabit = async (uid, habit) => {
     habit.goal.daysInMonthSelected = [];
   }
 
+  // if (habit.endDate <= new Date()) {
+  //   habit.isActive = false;
+  // }
+
   const habitDoc = {
     name: habit.name,
     description: habit.description || "",
@@ -452,7 +456,7 @@ export const createHabit = async (uid, habit) => {
     priority: habit.priority || "none",
     startDate: habit.startDate || null,
     endDate: habit.endDate || null,
-    isActive: habit.isActive ?? true,
+    isActive: new Date(habit.endDate) <= new Date() ? false : true,
     streak: 0,
     lastCompletedDate: null,
     completions: [],

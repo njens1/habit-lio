@@ -1,3 +1,19 @@
+@media (prefers-color-scheme: dark){
+    #onboarding{
+        background: #152331 !important;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #1b1b1b, #152331) !important;  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #1b1b1b, #152331) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    #onboarding p,
+    #onboarding label {
+        color: white !important;
+    }
+
+    .onboarding-content h1{
+        color: white !important;
+    }
+}
 #onboarding-container {
     background-color: rgba(0, 0, 0, 0.35);
     position: fixed;
@@ -20,7 +36,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 80%;
+    width: 90%;
 }
 
 .dot {
@@ -46,7 +62,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #ffffff;
+    background: #ffffff;
     color: black;
     width: 35rem;
     height: 35rem;
@@ -197,13 +213,14 @@ label {
     align-items: center;
     justify-content: center;
     /* border: 5px solid black; */
-    width: 100%;
+    width: 40em;
 }
 .affirmation-input-inner-onboarding{
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    gap: 1em;
     /* border: 5px solid red; */
     width: 80%;
 

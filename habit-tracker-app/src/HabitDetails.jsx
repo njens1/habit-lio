@@ -316,6 +316,7 @@ function GoalInfo({ habit, updateGoalField, setDisabled }) {
                     name="value"
                     min="1"
                     max="10000"
+                    defaultValue={1}
                     onInput={(e) => {
                         const value = parseInt(e.target.value) || 1;
                         if (value > 10000) e.target.value = 10000;

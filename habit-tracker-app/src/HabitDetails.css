@@ -1,3 +1,15 @@
+@media (prefers-color-scheme: dark){
+    .details-name{
+        color: white !important;
+    }
+
+    #details-frame{
+    background: #152331 !important;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #1b1b1b, #152331) !important;  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #1b1b1b, #152331) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+}
+
 body {
   color: black;
 }
@@ -6,7 +18,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: start;
-  background-color: #e8f6ff;
+  background: #e8f6ff;
   border: 1px solid #ffffff;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.75);
   border-radius: 10px;
@@ -33,7 +45,7 @@ body {
   justify-content: flex-start;
 
   background-color: #fffefe;
-  outline: 0.1px solid black;
+  /* outline: 0.1px solid black; */
   border-radius: 10px;
   width: 85%;
   margin: 10px;

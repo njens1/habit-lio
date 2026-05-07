@@ -44,7 +44,9 @@ function AffirmationInput({index, affirmation, setAffirmations, remove}){
 
     return(
         <div>
-            <label htmlFor={`affirmation-${index}`}><b>Positive Affirmation {index + 1}</b></label>
+            <label 
+            className="affirmation-number"
+            htmlFor={`affirmation-${index}`}><b>Positive Affirmation {index + 1}</b></label>
             <p>(100 Characters or Less)</p>
             <div className="affirmation-input-container">
                 <div className="affirmation-input-inner">

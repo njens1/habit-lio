@@ -99,7 +99,7 @@ function ToDoCalendar(props) {
   }
   return (
     <div className="todo-calendar">
-      <h2>To-Do Calendar</h2>
+      <h2 id="todo-calender-title">To-Do Calendar</h2>
       {/* Calendar component goes here */}
         <div className="todo-calendar-container">
           <DayPicker

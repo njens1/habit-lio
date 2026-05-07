@@ -12,6 +12,10 @@
      .habits-on-day{
         background: white !important;
      }
+
+     #todo-calender-title{
+        color: black !important;
+     }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,6 +32,10 @@
         background: #152331;  /* fallback for old browsers */
         background: -webkit-linear-gradient(to right, #1b1b1b, #152331);  /* Chrome 10-25, Safari 5.1-6 */
         background: linear-gradient(to right, #1b1b1b, #152331); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+     }
+
+      #todo-calender-title{
+        color: white !important;
      }
 }
 

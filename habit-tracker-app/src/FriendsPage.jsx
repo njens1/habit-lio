@@ -480,7 +480,7 @@ const UserProfileModal = ({
                       ))}
                     </select>
                   </div>
-                  <div style={{ height: "180px" }}>
+                  <div className="data-table" style={{ height: "180px" }}>
                     <Bar
                       data={getBarData()}
                       options={{

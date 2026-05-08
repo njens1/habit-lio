@@ -399,7 +399,7 @@ function Profile({ uid, onClose }) {
                     ))}
                   </select>
                 </div>
-                <div id="data-table" style={{ height: "180px" }}>
+                <div className="data-table" style={{ height: "180px" }}>
                   <Bar
                     data={barData}
                     options={{

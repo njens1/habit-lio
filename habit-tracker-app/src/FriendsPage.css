@@ -203,6 +203,10 @@
   #requests-modal-title{
     color:white !important;
   }
+
+  .request-card{
+    background: white !important;
+  }
 }
 
 #requests-modal {

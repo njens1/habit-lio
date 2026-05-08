@@ -56,7 +56,7 @@
     color: #eee !important;
   }
   
-  #data-table{
+  .data-table{
     background-color: white !important;
   }
 
@@ -72,7 +72,7 @@
 
 
 
-#data-table {
+.data-table {
   background-color: transparent;
 }
 
